@@ -1,6 +1,7 @@
 // written by bastiaan konings schuiling 2008 - 2014
-// this work is public domain. the code is undocumented, scruffy, untested, and should generally not be used for anything important.
-// i do not offer support, so don't ask. to be used for inspiration :)
+// this work is public domain. the code is undocumented, scruffy, untested, and
+// should generally not be used for anything important. i do not offer support,
+// so don't ask. to be used for inspiration :)
 
 #ifndef _HPP_AUDIORENDERER_MESSAGES
 #define _HPP_AUDIORENDERER_MESSAGES
@@ -11,93 +12,98 @@
 
 namespace blunted {
 
-  // messages
+// messages
 
-  class AudioRendererMessage_CreateContext : public Command {
+class AudioRendererMessage_CreateContext : public Command {
 
-    public:
-      AudioRendererMessage_CreateContext() : Command("audiomsg_CreateContext") {};
+public:
+  AudioRendererMessage_CreateContext() : Command("audiomsg_CreateContext") {};
 
-      // return values
-      bool success;
+  // return values
+  bool success;
 
-    protected:
-      virtual bool Execute(void *caller = NULL) {
-        success = static_cast<AudioRenderer*>(caller)->CreateContext();
-        return true;
-      }
+protected:
+  virtual bool Execute(void *caller = NULL) {
+    success = static_cast<AudioRenderer *>(caller)->CreateContext();
+    return true;
+  }
+};
 
-  };
+class AudioRendererMessage_DeleteContext : public Command {
 
-  class AudioRendererMessage_DeleteContext : public Command {
+public:
+  AudioRendererMessage_DeleteContext() : Command("audiomsg_DeleteContext") {};
 
-    public:
-      AudioRendererMessage_DeleteContext() : Command("audiomsg_DeleteContext") {};
+  // return values
+  bool success;
 
-      // return values
-      bool success;
+protected:
+  virtual bool Execute(void *caller = NULL) {
+    static_cast<AudioRenderer *>(caller)->Exit();
+    return true;
+  }
+};
 
-    protected:
-      virtual bool Execute(void *caller = NULL) {
-        static_cast<AudioRenderer*>(caller)->Exit();
-        return true;
-      }
+class AudioRendererMessage_CreateAudioSoundBuffer : public Command {
 
-  };
+public:
+  AudioRendererMessage_CreateAudioSoundBuffer(const WavData *wavData)
+      : Command("audiomsg_CreateAudioSoundBuffer"), wavData(wavData) {};
 
-  class AudioRendererMessage_CreateAudioSoundBuffer : public Command {
+  int audioSoundBufferID;
 
-    public:
-      AudioRendererMessage_CreateAudioSoundBuffer(const WavData *wavData) : Command("audiomsg_CreateAudioSoundBuffer"), wavData(wavData) {};
+protected:
+  virtual bool Execute(void *caller = NULL);
 
-      int audioSoundBufferID;
+  const WavData *wavData;
+};
 
-    protected:
-      virtual bool Execute(void *caller = NULL);
+class AudioRendererMessage_DeleteAudioSoundBuffer : public Command {
 
-      const WavData *wavData;
+public:
+  AudioRendererMessage_DeleteAudioSoundBuffer(int audioSoundBufferID)
+      : Command("audiomsg_DeleteAudioSoundBuffer"),
+        audioSoundBufferID(audioSoundBufferID) {};
 
-  };
+protected:
+  virtual bool Execute(void *caller = NULL);
 
-  class AudioRendererMessage_DeleteAudioSoundBuffer : public Command {
+  int audioSoundBufferID;
+};
 
-    public:
-      AudioRendererMessage_DeleteAudioSoundBuffer(int audioSoundBufferID) : Command("audiomsg_DeleteAudioSoundBuffer"), audioSoundBufferID(audioSoundBufferID) {};
+class AudioRendererMessage_PlayAudioSoundBuffer : public Command {
 
-    protected:
-      virtual bool Execute(void *caller = NULL);
+public:
+  AudioRendererMessage_PlayAudioSoundBuffer(int audioSoundBufferID)
+      : Command("audiomsg_PlayAudioSoundBuffer"),
+        audioSoundBufferID(audioSoundBufferID) {};
 
-      int audioSoundBufferID;
+protected:
+  virtual bool Execute(void *caller = NULL);
 
-  };
+  int audioSoundBufferID;
+};
 
-  class AudioRendererMessage_PlayAudioSoundBuffer : public Command {
+class AudioRendererMessage_ConfigAudioSoundBuffer : public Command {
 
-    public:
-      AudioRendererMessage_PlayAudioSoundBuffer(int audioSoundBufferID) : Command("audiomsg_PlayAudioSoundBuffer"), audioSoundBufferID(audioSoundBufferID) {};
+public:
+  AudioRendererMessage_ConfigAudioSoundBuffer(int audioSoundBufferID,
+                                              float gain = 0.1,
+                                              float pitch = 1.0,
+                                              bool loop = false)
+      : Command("audiomsg_ConfigAudioSoundBuffer"),
+        audioSoundBufferID(audioSoundBufferID), gain(gain), pitch(pitch),
+        loop(loop) {};
 
-    protected:
-      virtual bool Execute(void *caller = NULL);
+protected:
+  virtual bool Execute(void *caller = NULL);
 
-      int audioSoundBufferID;
+  int audioSoundBufferID;
+  float gain;
+  float pitch;
+  bool loop;
+};
 
-  };
-
-  class AudioRendererMessage_ConfigAudioSoundBuffer : public Command {
-
-    public:
-      AudioRendererMessage_ConfigAudioSoundBuffer(int audioSoundBufferID, float gain = 0.1, float pitch = 1.0, bool loop = false) : Command("audiomsg_ConfigAudioSoundBuffer"), audioSoundBufferID(audioSoundBufferID), gain(gain), pitch(pitch), loop(loop) {};
-
-    protected:
-      virtual bool Execute(void *caller = NULL);
-
-      int audioSoundBufferID;
-      float gain;
-      float pitch;
-      bool loop;
-
-  };
-
-}
+} // namespace blunted
 
 #endif

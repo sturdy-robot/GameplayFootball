@@ -1,15 +1,16 @@
 // written by bastiaan konings schuiling 2008 - 2015
-// this work is public domain. the code is undocumented, scruffy, untested, and should generally not be used for anything important.
-// i do not offer support, so don't ask. to be used for inspiration :)
+// this work is public domain. the code is undocumented, scruffy, untested, and
+// should generally not be used for anything important. i do not offer support,
+// so don't ask. to be used for inspiration :)
 
 #ifndef _HPP_REFEREE
 #define _HPP_REFEREE
 
-#include "defines.hpp"
 #include "../gamedefines.hpp"
+#include "defines.hpp"
 
-#include "scene/scene3d/scene3d.hpp"
 #include "scene/objects/sound.hpp"
+#include "scene/scene3d/scene3d.hpp"
 
 using namespace blunted;
 
@@ -39,40 +40,46 @@ struct Foul {
 
 class Referee {
 
-  public:
-    Referee(Match *match);
-    virtual ~Referee();
+public:
+  Referee(Match *match);
+  virtual ~Referee();
 
-    void Process();
+  void Process();
 
-    void PrepareSetPiece(e_SetPiece setPiece);
+  void PrepareSetPiece(e_SetPiece setPiece);
 
-    const RefereeBuffer &GetBuffer() { return buffer; };
+  const RefereeBuffer &GetBuffer() { return buffer; };
 
-    void AlterSetPiecePrepareTime(unsigned long newTime_ms);
+  void AlterSetPiecePrepareTime(unsigned long newTime_ms);
 
-    void BallTouched();
-    void TripNotice(Player *tripee, Player *tripper, int tackleType); // 1 == standing tackle resulting in little trip, 2 == standing tackle resulting in fall, 3 == sliding tackle
-    bool CheckFoul();
+  void BallTouched();
+  void TripNotice(
+      Player *tripee, Player *tripper,
+      int tackleType); // 1 == standing tackle resulting in little trip, 2 ==
+                       // standing tackle resulting in fall, 3 == sliding tackle
+  bool CheckFoul();
 
-    Player *GetCurrentFoulPlayer() { return foul.foulPlayer; }
-    int GetCurrentFoulType() { return foul.foulType; }
+  Player *GetCurrentFoulPlayer() { return foul.foulPlayer; }
+  int GetCurrentFoulType() { return foul.foulType; }
 
-  protected:
-    Match *match;
+protected:
+  Match *match;
 
-    boost::shared_ptr<Scene3D> scene3D;
+  boost::shared_ptr<Scene3D> scene3D;
 
-    RefereeBuffer buffer;
+  RefereeBuffer buffer;
 
-    int afterSetPieceRelaxTime_ms; // throw-ins cause immediate new throw-ins, because ball is still outside the lines at the moment of throwing ;)
+  int afterSetPieceRelaxTime_ms; // throw-ins cause immediate new throw-ins,
+                                 // because ball is still outside the lines at
+                                 // the moment of throwing ;)
 
-    std::map<Player*, Vector3> offsidePlayers; // player, position at time of touch
+  std::map<Player *, Vector3>
+      offsidePlayers; // player, position at time of touch
 
-    Foul foul;
+  Foul foul;
 
-    boost::intrusive_ptr<Sound> whistle[4]; // 0: short, 1: long, 2: half time, 3: full time
-
+  boost::intrusive_ptr<Sound>
+      whistle[4]; // 0: short, 1: long, 2: half time, 3: full time
 };
 
 #endif

@@ -1250,8 +1250,9 @@ void Match::Process() {
         // printf("setting tactical debug item %s (%s)\n",
         // (*tacIter).first.c_str(), (*tacIter).second.c_str());
         float userValue = atof((*tacIter).second.c_str());
-        float autoValue = 0.0f; // autoTacticsModifiers.GetReal((*tacIter).first.c_str(),
-                                // 0.5f);
+        float autoValue =
+            0.0f; // autoTacticsModifiers.GetReal((*tacIter).first.c_str(),
+                  // 0.5f);
         // float liveValue =
         // liveTacticsModifiers.GetReal((*tacIter).first.c_str(), 0.5f);
         // printf("%s for team %i (entry %i): %f %f %f\n",

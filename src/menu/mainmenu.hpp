@@ -1,25 +1,25 @@
 // written by bastiaan konings schuiling 2008 - 2015
-// this work is public domain. the code is undocumented, scruffy, untested, and should generally not be used for anything important.
-// i do not offer support, so don't ask. to be used for inspiration :)
+// this work is public domain. the code is undocumented, scruffy, untested, and
+// should generally not be used for anything important. i do not offer support,
+// so don't ask. to be used for inspiration :)
 
 #ifndef _HPP_MENU_MAIN
 #define _HPP_MENU_MAIN
 
 #include "utils/gui2/windowmanager.hpp"
 
+#include "utils/gui2/widgets/button.hpp"
+#include "utils/gui2/widgets/capturekey.hpp"
+#include "utils/gui2/widgets/grid.hpp"
+#include "utils/gui2/widgets/image.hpp"
 #include "utils/gui2/widgets/menu.hpp"
 #include "utils/gui2/widgets/root.hpp"
-#include "utils/gui2/widgets/grid.hpp"
-#include "utils/gui2/widgets/button.hpp"
-#include "utils/gui2/widgets/image.hpp"
-#include "utils/gui2/widgets/capturekey.hpp"
 
 #include "../utils.hpp"
 
 #include "../onthepitch/match.hpp"
 
 using namespace blunted;
-
 
 // import structs
 
@@ -65,60 +65,56 @@ struct PlayerImport {
   float averageStartStat; // calculated back to 15 year old
 };
 
-
 class IntroPage : public Gui2Page {
 
-  public:
-    IntroPage(Gui2WindowManager *windowManager, const Gui2PageData &pageData);
-    virtual ~IntroPage();
+public:
+  IntroPage(Gui2WindowManager *windowManager, const Gui2PageData &pageData);
+  virtual ~IntroPage();
 
-    virtual void ProcessWindowingEvent(WindowingEvent *event);
-    virtual void ProcessKeyboardEvent(KeyboardEvent *event);
+  virtual void ProcessWindowingEvent(WindowingEvent *event);
+  virtual void ProcessKeyboardEvent(KeyboardEvent *event);
 
-  protected:
-    Gui2Image *bg;
-
+protected:
+  Gui2Image *bg;
 };
 
 class OutroPage : public Gui2Page {
 
-  public:
-    OutroPage(Gui2WindowManager *windowManager, const Gui2PageData &pageData);
-    virtual ~OutroPage();
+public:
+  OutroPage(Gui2WindowManager *windowManager, const Gui2PageData &pageData);
+  virtual ~OutroPage();
 
-    virtual void ProcessWindowingEvent(WindowingEvent *event);
-    virtual void ProcessKeyboardEvent(KeyboardEvent *event);
+  virtual void ProcessWindowingEvent(WindowingEvent *event);
+  virtual void ProcessKeyboardEvent(KeyboardEvent *event);
 
-  protected:
-    Gui2Image *bg;
-
+protected:
+  Gui2Image *bg;
 };
 
 class MainMenuPage : public Gui2Page {
 
-  public:
-    MainMenuPage(Gui2WindowManager *windowManager, const Gui2PageData &pageData);
-    virtual ~MainMenuPage();
+public:
+  MainMenuPage(Gui2WindowManager *windowManager, const Gui2PageData &pageData);
+  virtual ~MainMenuPage();
 
-    void GoControllerSelect();
-    void GoLeague();
-    void GoSettings();
-    void GoCredits();
-    void GoOutro();
-    bool GoImportDB();
-    //XX void Import_AgeValueStatsAdd(int age, int value);
-    //XX void Import_ProcessAgeValueStats();
+  void GoControllerSelect();
+  void GoLeague();
+  void GoSettings();
+  void GoCredits();
+  void GoOutro();
+  bool GoImportDB();
+  // XX void Import_AgeValueStatsAdd(int age, int value);
+  // XX void Import_ProcessAgeValueStats();
 
-    virtual void ProcessWindowingEvent(WindowingEvent *event);
+  virtual void ProcessWindowingEvent(WindowingEvent *event);
 
-  protected:
-    Gui2Grid *grid;
+protected:
+  Gui2Grid *grid;
 
-    std::vector<Gui2Button*> buttons;
+  std::vector<Gui2Button *> buttons;
 
-    std::map < int, std::vector<int> > ageValues;
-    std::map < int, float > averageStatPerAge;
-
+  std::map<int, std::vector<int>> ageValues;
+  std::map<int, float> averageStatPerAge;
 };
 
 #endif

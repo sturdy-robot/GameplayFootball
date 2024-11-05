@@ -1,6 +1,7 @@
 // written by bastiaan konings schuiling 2008 - 2015
-// this work is public domain. the code is undocumented, scruffy, untested, and should generally not be used for anything important.
-// i do not offer support, so don't ask. to be used for inspiration :)
+// this work is public domain. the code is undocumented, scruffy, untested, and
+// should generally not be used for anything important. i do not offer support,
+// so don't ask. to be used for inspiration :)
 
 #ifndef _HPP_MAIN
 #define _HPP_MAIN
@@ -8,21 +9,17 @@
 #include "blunted.hpp"
 
 #include "gametask.hpp"
-#include "menu/menutask.hpp"
 #include "hid/ihidevice.hpp"
+#include "menu/menutask.hpp"
 
 #include "systems/graphics/graphics_system.hpp"
 
 #include "base/properties.hpp"
 
-#include "utils/database.hpp"
 #include "sqlite3.h"
+#include "utils/database.hpp"
 
-enum e_DebugMode {
-  e_DebugMode_Off,
-  e_DebugMode_Tactical,
-  e_DebugMode_AI
-};
+enum e_DebugMode { e_DebugMode_Off, e_DebugMode_Tactical, e_DebugMode_AI };
 
 class Match;
 
@@ -63,12 +60,13 @@ bool SuperDebug();
 e_DebugMode GetDebugMode();
 boost::intrusive_ptr<Image2D> GetDebugImage();
 boost::intrusive_ptr<Image2D> GetDebugOverlay();
-void GetDebugOverlayCoord(Match *match, const Vector3 &worldPos, int &x, int &y);
+void GetDebugOverlayCoord(Match *match, const Vector3 &worldPos, int &x,
+                          int &y);
 
 int PredictFrameTimeToGo_ms(int frameCount);
 
-const std::vector<IHIDevice*> &GetControllers();
+const std::vector<IHIDevice *> &GetControllers();
 
-int main(int argc, const char** argv);
+int main(int argc, const char **argv);
 
 #endif

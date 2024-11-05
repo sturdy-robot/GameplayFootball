@@ -1,6 +1,7 @@
 // written by bastiaan konings schuiling 2008 - 2015
-// this work is public domain. the code is undocumented, scruffy, untested, and should generally not be used for anything important.
-// i do not offer support, so don't ask. to be used for inspiration :)
+// this work is public domain. the code is undocumented, scruffy, untested, and
+// should generally not be used for anything important. i do not offer support,
+// so don't ask. to be used for inspiration :)
 
 #ifndef _HPP_FOOTBALL_UTILS
 #define _HPP_FOOTBALL_UTILS
@@ -15,10 +16,10 @@ using namespace blunted;
 
 float GetQuantizedDirectionBias();
 void QuantizeDirection(Vector3 &inputDirection, float bias = 1.0f);
-Vector3 GetProjectedCoord(const Vector3 &pos3D, boost::intrusive_ptr<Camera> camera);
+Vector3 GetProjectedCoord(const Vector3 &pos3D,
+                          boost::intrusive_ptr<Camera> camera);
 
 int GetVelocityID(e_Velocity velo, bool treatDribbleAsWalk = false);
-
 
 // stats fiddling
 
@@ -51,18 +52,22 @@ enum e_DevelopmentCurveType {
 };
 
 // converts FM positions string into weighted positions vector
-void GetWeightedPositions(const std::string &positionString, std::vector<WeightedPosition> &weightedPositions);
+void GetWeightedPositions(const std::string &positionString,
+                          std::vector<WeightedPosition> &weightedPositions);
 
 void InitDefaultProfiles();
-void GetDefaultProfile(const std::vector<WeightedPosition> &weightedPositions, std::vector<Stat> &averageProfile);
+void GetDefaultProfile(const std::vector<WeightedPosition> &weightedPositions,
+                       std::vector<Stat> &averageProfile);
 std::string GetProfileString(const std::vector<Stat> &profileStats);
 
 float GetAverageStatFromValue(int age, int value);
 
-float CalculateStat(float baseStat, float profileStat, float age, e_DevelopmentCurveType developmentCurveType);
+float CalculateStat(float baseStat, float profileStat, float age,
+                    e_DevelopmentCurveType developmentCurveType);
 /* ^ above one supersedes these
 float GetIndividualStat(float averageStat, float profileStat, float age);
-float GetAverageStatFromBaseStat(int age, float baseStat, e_DevelopmentCurveType developmentCurveType);
+float GetAverageStatFromBaseStat(int age, float baseStat, e_DevelopmentCurveType
+developmentCurveType);
 */
 
 // /stats fiddling
@@ -80,25 +85,27 @@ template <> TemporalValue<Quaternion>::TemporalValue();
 
 template <typename T> class TemporalSmoother {
 
-  public:
-    TemporalSmoother();
-    virtual ~TemporalSmoother() {}
+public:
+  TemporalSmoother();
+  virtual ~TemporalSmoother() {}
 
-    void SetValue(const T &data, unsigned long valueTime_ms);
-    T GetValue(unsigned long currentTime_ms, unsigned long history_ms = temporalSmoother_history_ms) const; // get interpolated measurement, history_ms seconds ago from now
+  void SetValue(const T &data, unsigned long valueTime_ms);
+  T GetValue(unsigned long currentTime_ms,
+             unsigned long history_ms = temporalSmoother_history_ms)
+      const; // get interpolated measurement, history_ms seconds ago from now
 
-    void Clear() {
-      values.clear();
-    }
+  void Clear() { values.clear(); }
 
-  protected:
-    T MixData(const T &data1, const T &data2, float bias = 0.0f) const;
+protected:
+  T MixData(const T &data1, const T &data2, float bias = 0.0f) const;
 
-    boost::circular_buffer< TemporalValue<T> > values;
-    unsigned int snapshotSize;
-
+  boost::circular_buffer<TemporalValue<T>> values;
+  unsigned int snapshotSize;
 };
 
-template <> Quaternion TemporalSmoother<Quaternion>::MixData(const Quaternion &data1, const Quaternion &data2, float bias) const;
+template <>
+Quaternion TemporalSmoother<Quaternion>::MixData(const Quaternion &data1,
+                                                 const Quaternion &data2,
+                                                 float bias) const;
 
 #endif

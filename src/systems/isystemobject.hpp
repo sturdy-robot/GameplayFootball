@@ -1,6 +1,7 @@
 // written by bastiaan konings schuiling 2008 - 2014
-// this work is public domain. the code is undocumented, scruffy, untested, and should generally not be used for anything important.
-// i do not offer support, so don't ask. to be used for inspiration :)
+// this work is public domain. the code is undocumented, scruffy, untested, and
+// should generally not be used for anything important. i do not offer support,
+// so don't ask. to be used for inspiration :)
 
 #ifndef _HPP_SYSTEMS_IFACE_OBJECT
 #define _HPP_SYSTEMS_IFACE_OBJECT
@@ -13,17 +14,17 @@
 
 namespace blunted {
 
-  class ISystemObject {
+class ISystemObject {
 
-    public:
-      virtual ~ISystemObject() {};
+public:
+  virtual ~ISystemObject() {};
 
-      virtual boost::intrusive_ptr<Interpreter> GetInterpreter(e_ObjectType objectType) = 0;
+  virtual boost::intrusive_ptr<Interpreter>
+  GetInterpreter(e_ObjectType objectType) = 0;
 
-    protected:
+protected:
+};
 
-  };
-
-}
+} // namespace blunted
 
 #endif

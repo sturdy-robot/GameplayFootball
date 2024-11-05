@@ -782,8 +782,9 @@ void TeamAIController::CalculateManMarking() {
 
   // new method
 
-  int numMarkedOpponents = 3; // std::min(match->GetTeam(0)->GetActivePlayerCount(),
-                              // match->GetTeam(1)->GetActivePlayerCount());
+  int numMarkedOpponents =
+      3; // std::min(match->GetTeam(0)->GetActivePlayerCount(),
+         // match->GetTeam(1)->GetActivePlayerCount());
 
   const std::vector<TacticalOpponentInfo> &oppInfo = GetTacticalOpponentInfo();
 

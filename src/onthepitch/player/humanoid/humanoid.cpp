@@ -204,7 +204,7 @@ void Humanoid::Process() {
         ((spatialState.position + spatialState.movement * 0.1f) -
          match->GetBall()->Predict(100).Get2D())
             .GetLength(); //(spatialState.position -
-                          //match->GetDesignatedPossessionPlayer()->GetPosition()).GetLength();
+                          // match->GetDesignatedPossessionPlayer()->GetPosition()).GetLength();
 
     if (match->GetDesignatedPossessionPlayer() == player &&
         actionDistance < 3.0f) {
@@ -2801,7 +2801,7 @@ float Humanoid::GetBodyBallDistanceAdvantage(
     //  behindCenter.Print();
     //  behindVector.Print();
     //(spatialState.position + (behindCenter - behindVector * radius *
-    //cheatFactor * 0.5f).GetRotated2D(spatialState.angle)).Print();
+    // cheatFactor * 0.5f).GetRotated2D(spatialState.angle)).Print();
 
     // SetRedDebugPilon(spatialState.position + (behindCenter - behindVector *
     // (radius + (effectiveRadiusCheatDistance * radiusCheatBehindBias)) *

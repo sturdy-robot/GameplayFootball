@@ -586,16 +586,16 @@ bool MainMenuPage::GoImportDB() {
       "<p11><position>1.0,  0.0</position><role>CF</role></p11>";
 
   //<p1><position>-1.0,  0.0</position><role>GK</role></p1><p2><position>-0.7,
-  //0.75</position><role>LB</role></p2><p3><position>-1.0,
-  //0.25</position><role>CB</role></p3><p4><position>-1.0,
+  // 0.75</position><role>LB</role></p2><p3><position>-1.0,
+  // 0.25</position><role>CB</role></p3><p4><position>-1.0,
   //-0.25</position><role>CB</role></p4><p5><position>-0.7,
   //-0.75</position><role>RB</role></p5><p6><position>-0.2,
-  //0.3</position><role>CM</role></p6><p7><position>-0.2,
+  // 0.3</position><role>CM</role></p6><p7><position>-0.2,
   //-0.3</position><role>CM</role></p7><p8><position> 0.7,
-  //0.9</position><role>LM</role></p8><p9><position> 0.2,
-  //0.0</position><role>AM</role></p9><p10><position>0.7,
+  // 0.9</position><role>LM</role></p8><p9><position> 0.2,
+  // 0.0</position><role>AM</role></p9><p10><position>0.7,
   //-0.9</position><role>RM</role></p10><p11><position>1.0,
-  //0.0</position><role>CF</role></p11>
+  // 0.0</position><role>CF</role></p11>
 
   /*
   // 4-4-2

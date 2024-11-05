@@ -328,10 +328,10 @@ void ElizaController::RequestCommand(PlayerCommandQueue &commandQueue) {
            match->GetDesignatedPossessionPlayer() != player &&
            CastPlayer()->GetFormationEntry().role !=
                e_PlayerRole_GK) { //(match->GetDesignatedPossessionPlayer() !=
-                                  //player ||
+                                  // player ||
                                   //(CastPlayer()->GetFormationEntry().role ==
-                                  //e_PlayerRole_GK &&
-                                  //!CastPlayer()->HasPossession()))) {
+                                  // e_PlayerRole_GK &&
+                                  //! CastPlayer()->HasPossession()))) {
     if (CastPlayer()->GetFormationEntry().role == e_PlayerRole_LB ||
         CastPlayer()->GetFormationEntry().role == e_PlayerRole_CB ||
         CastPlayer()->GetFormationEntry().role == e_PlayerRole_RB) {

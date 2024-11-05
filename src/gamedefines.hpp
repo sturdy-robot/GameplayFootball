@@ -1,6 +1,7 @@
 // written by bastiaan konings schuiling 2008 - 2015
-// this work is public domain. the code is undocumented, scruffy, untested, and should generally not be used for anything important.
-// i do not offer support, so don't ask. to be used for inspiration :)
+// this work is public domain. the code is undocumented, scruffy, untested, and
+// should generally not be used for anything important. i do not offer support,
+// so don't ask. to be used for inspiration :)
 
 #ifndef _HPP_GAMEDEFINES
 #define _HPP_GAMEDEFINES
@@ -51,7 +52,9 @@ const float _default_HighPass_AutoDirection = 0.2f;
 const float _default_HighPass_AutoPower = 0.5f;
 const float _default_Shot_AutoDirection = 0.2f;
 
-const float distanceToVelocityMultiplier = 2.6f; // for example: when we need to travel 4 meters, we need to go at velo 4 * distanceToVelocityMultiplier
+const float distanceToVelocityMultiplier =
+    2.6f; // for example: when we need to travel 4 meters, we need to go at velo
+          // 4 * distanceToVelocityMultiplier
 
 const unsigned int ballPredictionSize_ms = 3000;
 const unsigned int ballHistorySize_ms = 4000;
@@ -67,21 +70,21 @@ const float defaultPlayerHeight = 1.92f;
 
 const int temporalSmoother_history_ms = 20;
 
-//#define dataSetSortable 1
+// #define dataSetSortable 1
 #ifdef dataSetSortable
 typedef std::list<int> DataSet;
 #else
 typedef std::deque<int> DataSet;
 #endif
 
-const SDL_Keycode defaultKeyIDs[18] = { SDLK_UP, SDLK_RIGHT, SDLK_DOWN, SDLK_LEFT, SDLK_w, SDLK_a, SDLK_s, SDLK_d, SDLK_w, SDLK_a, SDLK_s, SDLK_d, SDLK_q, SDLK_z, SDLK_e, SDLK_c, SDLK_F1, SDLK_RETURN };
+const SDL_Keycode defaultKeyIDs[18] = {
+    SDLK_UP, SDLK_RIGHT, SDLK_DOWN, SDLK_LEFT, SDLK_w,  SDLK_a,
+    SDLK_s,  SDLK_d,     SDLK_w,    SDLK_a,    SDLK_s,  SDLK_d,
+    SDLK_q,  SDLK_z,     SDLK_e,    SDLK_c,    SDLK_F1, SDLK_RETURN};
 
 class Player;
 
-enum e_Side {
-  e_Side_Left,
-  e_Side_Right
-};
+enum e_Side { e_Side_Left, e_Side_Right };
 
 enum e_Velocity {
   e_Velocity_Idle,
@@ -109,9 +112,9 @@ enum e_FunctionType {
 };
 
 enum e_TouchType {
-  e_TouchType_Intentional_Kicked, // goalies can't touch this
+  e_TouchType_Intentional_Kicked,    // goalies can't touch this
   e_TouchType_Intentional_Nonkicked, // headers and such
-  e_TouchType_Accidental, // collisions
+  e_TouchType_Accidental,            // collisions
   e_TouchType_None,
   e_TouchType_SIZE
 };
@@ -153,17 +156,16 @@ struct TouchInfo {
     desiredPower = 0;
   }
 
-  Vector3         inputDirection;
-  float           inputPower;
+  Vector3 inputDirection;
+  float inputPower;
 
-  float           autoDirectionBias;
-  float           autoPowerBias;
+  float autoDirectionBias;
+  float autoPowerBias;
 
-  Vector3         desiredDirection; // inputdirection after pass function
-  float           desiredPower;
-  Player          *targetPlayer; // null == do not use
-  Player          *forcedTargetPlayer; // null == do not use
-
+  Vector3 desiredDirection; // inputdirection after pass function
+  float desiredPower;
+  Player *targetPlayer;       // null == do not use
+  Player *forcedTargetPlayer; // null == do not use
 };
 
 enum e_StrictMovement {
@@ -200,32 +202,32 @@ struct PlayerCommand {
 
   e_FunctionType desiredFunctionType;
 
-  bool           useDesiredMovement;
-  Vector3        desiredDirection;
+  bool useDesiredMovement;
+  Vector3 desiredDirection;
   e_StrictMovement strictMovement;
 
-  float          desiredVelocityFloat;
+  float desiredVelocityFloat;
 
-  bool           useDesiredLookAt;
-  Vector3        desiredLookAt; // absolute 'look at' position on pitch
+  bool useDesiredLookAt;
+  Vector3 desiredLookAt; // absolute 'look at' position on pitch
 
-  bool           useTouchInfo;
-  TouchInfo      touchInfo;
+  bool useTouchInfo;
+  TouchInfo touchInfo;
 
-  bool           onlyDeflectAnimsThatPickupBall;
+  bool onlyDeflectAnimsThatPickupBall;
 
-  bool           useTripType;
-  int            tripType; // only applicable for trip anims
+  bool useTripType;
+  int tripType; // only applicable for trip anims
 
-  bool           useDesiredTripDirection;
-  Vector3        desiredTripDirection;
+  bool useDesiredTripDirection;
+  Vector3 desiredTripDirection;
 
-  bool           useSpecialVar1;
-  int            specialVar1;
-  bool           useSpecialVar2;
-  int            specialVar2;
+  bool useSpecialVar1;
+  int specialVar1;
+  bool useSpecialVar2;
+  int specialVar2;
 
-  int            modifier;
+  int modifier;
 };
 
 typedef std::vector<PlayerCommand> PlayerCommandQueue;
@@ -249,7 +251,8 @@ e_PlayerRole GetRoleFromString(const std::string &roleString);
 struct FormationEntry {
   e_PlayerRole role;
   Vector3 databasePosition;
-  Vector3 position; // adapted to player role (combination of databasePosition and hardcoded role position)
+  Vector3 position; // adapted to player role (combination of databasePosition
+                    // and hardcoded role position)
 };
 
 struct PlayerImage {
@@ -278,21 +281,14 @@ const float goalDepth = 2.55f;
 const float goalHeight = 2.5f;
 const float goalHalfWidth = 3.7f;
 
-enum e_DecayType {
-  e_DecayType_Constant,
-  e_DecayType_Variable
-};
+enum e_DecayType { e_DecayType_Constant, e_DecayType_Variable };
 
-enum e_MagnetType {
-  e_MagnetType_Attract,
-  e_MagnetType_Repel
-};
+enum e_MagnetType { e_MagnetType_Attract, e_MagnetType_Repel };
 
-// forcefields consist of forcespots, representing a repelling or attracting force from a position, including linearity/etc parameters
+// forcefields consist of forcespots, representing a repelling or attracting
+// force from a position, including linearity/etc parameters
 struct ForceSpot {
-  ForceSpot() {
-    exp = 1.0f;
-  }
+  ForceSpot() { exp = 1.0f; }
   Vector3 origin;
   e_MagnetType magnetType;
   e_DecayType decayType;
@@ -303,31 +299,30 @@ struct ForceSpot {
 
 class PassRating {
 
-  public:
-    PassRating(int playerID, float odds, float pos, float sit) : playerID(playerID), odds(odds), pos(pos), sit(sit), rating(0) {}
-    virtual ~PassRating() {}
+public:
+  PassRating(int playerID, float odds, float pos, float sit)
+      : playerID(playerID), odds(odds), pos(pos), sit(sit), rating(0) {}
+  virtual ~PassRating() {}
 
-    void CalculateRating(float opportunism) {
-      rating = (sit * 1.0f + odds * 1.0f) * 0.5f * (1 - opportunism) +
-               pos * opportunism;
-    }
+  void CalculateRating(float opportunism) {
+    rating = (sit * 1.0f + odds * 1.0f) * 0.5f * (1 - opportunism) +
+             pos * opportunism;
+  }
 
-    bool operator < (const PassRating &otherPassRating) const {
-      return rating < otherPassRating.rating;
-    }
+  bool operator<(const PassRating &otherPassRating) const {
+    return rating < otherPassRating.rating;
+  }
 
-    int playerID;
+  int playerID;
 
-    // 0 .. 1 == worst .. best
-    float odds; // what are the odds a pass to this player will complete?
-    float pos; // is this player in a good position?
-    float sit; // target's situational rating
-    float rating; // resulting rating
-
+  // 0 .. 1 == worst .. best
+  float odds;   // what are the odds a pass to this player will complete?
+  float pos;    // is this player in a good position?
+  float sit;    // target's situational rating
+  float rating; // resulting rating
 };
 
 typedef std::vector<PassRating> PassRatings;
-
 
 void GetVertexColors(std::map<Vector3, Vector3> &colorCoords);
 

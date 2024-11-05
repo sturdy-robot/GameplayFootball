@@ -1,6 +1,7 @@
 // written by bastiaan konings schuiling 2008 - 2014
-// this work is public domain. the code is undocumented, scruffy, untested, and should generally not be used for anything important.
-// i do not offer support, so don't ask. to be used for inspiration :)
+// this work is public domain. the code is undocumented, scruffy, untested, and
+// should generally not be used for anything important. i do not offer support,
+// so don't ask. to be used for inspiration :)
 
 #ifndef _HPP_SYSTEMS_PHYSICS_SCENE
 #define _HPP_SYSTEMS_PHYSICS_SCENE
@@ -13,53 +14,53 @@
 
 namespace blunted {
 
-  class PhysicsSystem;
-  class IPhysicsWrapper;
+class PhysicsSystem;
+class IPhysicsWrapper;
 
-  class PhysicsScene : public ISystemScene {
+class PhysicsScene : public ISystemScene {
 
-    public:
-      PhysicsScene(PhysicsSystem *physicsSystem);
-      virtual ~PhysicsScene();
+public:
+  PhysicsScene(PhysicsSystem *physicsSystem);
+  virtual ~PhysicsScene();
 
-      virtual ISystemObject *CreateSystemObject(boost::intrusive_ptr<Object> object);
+  virtual ISystemObject *
+  CreateSystemObject(boost::intrusive_ptr<Object> object);
 
-      virtual boost::intrusive_ptr<ISceneInterpreter> GetInterpreter(e_SceneType sceneType);
+  virtual boost::intrusive_ptr<ISceneInterpreter>
+  GetInterpreter(e_SceneType sceneType);
 
-      PhysicsSystem *GetPhysicsSystem();
-      IPhysicsWrapper *GetPhysicsWrapper();
+  PhysicsSystem *GetPhysicsSystem();
+  IPhysicsWrapper *GetPhysicsWrapper();
 
-      int worldID;
-      int spaceID;
+  int worldID;
+  int spaceID;
 
-    protected:
-      PhysicsSystem *physicsSystem;
-      IPhysicsWrapper *physicsWrapper;
+protected:
+  PhysicsSystem *physicsSystem;
+  IPhysicsWrapper *physicsWrapper;
+};
 
-  };
+class PhysicsScene_Scene3DInterpreter : public IScene3DInterpreter {
 
+public:
+  PhysicsScene_Scene3DInterpreter(PhysicsScene *caller);
 
-  class PhysicsScene_Scene3DInterpreter : public IScene3DInterpreter {
+  virtual e_SystemType GetSystemType() const { return e_SystemType_Physics; }
 
-    public:
-      PhysicsScene_Scene3DInterpreter(PhysicsScene *caller);
+  virtual void OnLoad();
+  virtual void OnUnload();
 
-      virtual e_SystemType GetSystemType() const { return e_SystemType_Physics; }
+  virtual ISystemObject *
+  CreateSystemObject(boost::intrusive_ptr<Object> object);
 
-      virtual void OnLoad();
-      virtual void OnUnload();
+  virtual void SetGravity(const Vector3 &gravity);
+  virtual void SetErrorCorrection(float value);
+  virtual void SetConstraintForceMixing(float value);
 
-      virtual ISystemObject *CreateSystemObject(boost::intrusive_ptr<Object> object);
+protected:
+  PhysicsScene *caller;
+};
 
-      virtual void SetGravity(const Vector3 &gravity);
-      virtual void SetErrorCorrection(float value);
-      virtual void SetConstraintForceMixing(float value);
-
-    protected:
-      PhysicsScene *caller;
-
-  };
-
-}
+} // namespace blunted
 
 #endif

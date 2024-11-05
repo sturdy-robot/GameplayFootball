@@ -1,6 +1,7 @@
 // written by bastiaan konings schuiling 2008 - 2014
-// this work is public domain. the code is undocumented, scruffy, untested, and should generally not be used for anything important.
-// i do not offer support, so don't ask. to be used for inspiration :)
+// this work is public domain. the code is undocumented, scruffy, untested, and
+// should generally not be used for anything important. i do not offer support,
+// so don't ask. to be used for inspiration :)
 
 #ifndef _HPP_TASKSEQUENCE
 #define _HPP_TASKSEQUENCE
@@ -15,153 +16,142 @@
 
 namespace blunted {
 
-  class ITaskSequenceEntry {
+class ITaskSequenceEntry {
 
-    public:
-      virtual ~ITaskSequenceEntry() {};
-      virtual bool Execute() = 0;
-      virtual bool IsReady() = 0;
-      virtual void Wait() {};
-      virtual bool Reset() { return true; };
+public:
+  virtual ~ITaskSequenceEntry() {};
+  virtual bool Execute() = 0;
+  virtual bool IsReady() = 0;
+  virtual void Wait() {};
+  virtual bool Reset() { return true; };
 
-    protected:
+protected:
+};
 
-  };
+class TaskSequenceEntry_SystemTaskMessage : public ITaskSequenceEntry {
 
-  class TaskSequenceEntry_SystemTaskMessage : public ITaskSequenceEntry {
+public:
+  TaskSequenceEntry_SystemTaskMessage(
+      boost::intrusive_ptr<ISystemTaskMessage> command);
+  virtual ~TaskSequenceEntry_SystemTaskMessage();
 
-    public:
-      TaskSequenceEntry_SystemTaskMessage(boost::intrusive_ptr<ISystemTaskMessage> command);
-      virtual ~TaskSequenceEntry_SystemTaskMessage();
+  virtual bool Execute();
+  virtual bool IsReady();
+  virtual void Wait();
+  virtual bool Reset();
 
-      virtual bool Execute();
-      virtual bool IsReady();
-      virtual void Wait();
-      virtual bool Reset();
+protected:
+  boost::intrusive_ptr<ISystemTaskMessage> command;
+};
 
-    protected:
-      boost::intrusive_ptr<ISystemTaskMessage> command;
+class TaskSequenceEntry_UserTaskMessage : public ITaskSequenceEntry {
 
-  };
+public:
+  TaskSequenceEntry_UserTaskMessage(
+      boost::intrusive_ptr<IUserTaskMessage> command);
+  virtual ~TaskSequenceEntry_UserTaskMessage();
 
-  class TaskSequenceEntry_UserTaskMessage : public ITaskSequenceEntry {
+  virtual bool Execute();
+  virtual bool IsReady();
+  virtual void Wait();
+  virtual bool Reset();
 
-    public:
-      TaskSequenceEntry_UserTaskMessage(boost::intrusive_ptr<IUserTaskMessage> command);
-      virtual ~TaskSequenceEntry_UserTaskMessage();
+protected:
+  boost::intrusive_ptr<IUserTaskMessage> command;
+};
 
-      virtual bool Execute();
-      virtual bool IsReady();
-      virtual void Wait();
-      virtual bool Reset();
+class TaskSequenceEntryLockThread {
 
-    protected:
-      boost::intrusive_ptr<IUserTaskMessage> command;
+public:
+  TaskSequenceEntryLockThread(boost::mutex &sequenceLock);
+  void operator()();
+  void Reset();
+  bool IsReady();
 
-  };
+protected:
+  boost::mutex &sequenceLock;
+  Lockable<bool> isReady;
+};
 
-  class TaskSequenceEntryLockThread {
+class TaskSequenceEntry_Lock : public ITaskSequenceEntry {
 
-    public:
-      TaskSequenceEntryLockThread(boost::mutex &sequenceLock);
-      void operator()();
-      void Reset();
-      bool IsReady();
+public:
+  TaskSequenceEntry_Lock(boost::mutex &sequenceLock);
+  virtual ~TaskSequenceEntry_Lock();
 
-    protected:
-      boost::mutex &sequenceLock;
-      Lockable<bool> isReady;
+  virtual bool Execute();
+  virtual bool IsReady();
+  virtual bool Reset();
 
-  };
+protected:
+  boost::mutex &sequenceLock;
+  boost::thread lockThread;
+  TaskSequenceEntryLockThread *lockThreadObject;
+};
 
-  class TaskSequenceEntry_Lock : public ITaskSequenceEntry {
+class TaskSequenceEntry_Unlock : public ITaskSequenceEntry {
 
-    public:
-      TaskSequenceEntry_Lock(boost::mutex &sequenceLock);
-      virtual ~TaskSequenceEntry_Lock();
+public:
+  TaskSequenceEntry_Unlock(boost::mutex &sequenceLock);
+  virtual ~TaskSequenceEntry_Unlock();
 
-      virtual bool Execute();
-      virtual bool IsReady();
-      virtual bool Reset();
+  virtual bool Execute();
+  virtual bool IsReady();
 
-    protected:
-      boost::mutex &sequenceLock;
-      boost::thread lockThread;
-      TaskSequenceEntryLockThread *lockThreadObject;
+protected:
+  boost::mutex &sequenceLock;
+};
 
-  };
+class TaskSequenceEntry_Terminator : public ITaskSequenceEntry {
 
-  class TaskSequenceEntry_Unlock : public ITaskSequenceEntry {
+public:
+  TaskSequenceEntry_Terminator();
+  virtual ~TaskSequenceEntry_Terminator();
 
-    public:
-      TaskSequenceEntry_Unlock(boost::mutex &sequenceLock);
-      virtual ~TaskSequenceEntry_Unlock();
+  virtual bool Execute();
+  virtual bool IsReady();
+};
 
-      virtual bool Execute();
-      virtual bool IsReady();
+enum e_TaskPhase { e_TaskPhase_Get, e_TaskPhase_Process, e_TaskPhase_Put };
 
-    protected:
-      boost::mutex &sequenceLock;
+enum e_LockAction { e_LockAction_Lock, e_LockAction_Unlock };
 
-  };
+class TaskSequence {
 
-  class TaskSequenceEntry_Terminator : public ITaskSequenceEntry {
+public:
+  TaskSequence(const std::string &name, int sequenceTime_ms,
+               bool skipOnTooLate = true);
+  virtual ~TaskSequence();
 
-    public:
-      TaskSequenceEntry_Terminator();
-      virtual ~TaskSequenceEntry_Terminator();
+  void AddEntry(boost::shared_ptr<ITaskSequenceEntry> entry);
+  void AddSystemTaskEntry(ISystem *system, e_TaskPhase taskPhase);
+  void AddUserTaskEntry(boost::shared_ptr<IUserTask> userTask,
+                        e_TaskPhase taskPhase);
+  void AddLockEntry(boost::mutex &theLock, e_LockAction lockAction);
+  void AddTerminator();
 
-      virtual bool Execute();
-      virtual bool IsReady();
+  int GetEntryCount() const;
+  boost::shared_ptr<ITaskSequenceEntry> GetEntry(int num);
+  int GetSequenceTime() const;
+  void SetSequenceTime(int value);
+  const std::string GetName() const;
+  bool GetSkippable() const { return skipOnTooLate; }
 
-  };
+protected:
+  std::string name;
 
-  enum e_TaskPhase {
-    e_TaskPhase_Get,
-    e_TaskPhase_Process,
-    e_TaskPhase_Put
-  };
+  std::vector<boost::shared_ptr<ITaskSequenceEntry>> entries;
 
-  enum e_LockAction {
-    e_LockAction_Lock,
-    e_LockAction_Unlock
-  };
+  // time assigned for 1 run of this sequence
+  // if 0, run continuously
+  int sequenceTime_ms;
 
-  class TaskSequence {
+  // if at due start time the previous run is not ready yet,
+  // if true: just forget about the lost time
+  // if false: start as soon as previous run is ready, to keep up with the sync
+  bool skipOnTooLate;
+};
 
-    public:
-      TaskSequence(const std::string &name, int sequenceTime_ms, bool skipOnTooLate = true);
-      virtual ~TaskSequence();
-
-      void AddEntry(boost::shared_ptr<ITaskSequenceEntry> entry);
-      void AddSystemTaskEntry(ISystem *system, e_TaskPhase taskPhase);
-      void AddUserTaskEntry(boost::shared_ptr<IUserTask> userTask, e_TaskPhase taskPhase);
-      void AddLockEntry(boost::mutex &theLock, e_LockAction lockAction);
-      void AddTerminator();
-
-      int GetEntryCount() const;
-      boost::shared_ptr<ITaskSequenceEntry> GetEntry(int num);
-      int GetSequenceTime() const;
-      void SetSequenceTime(int value);
-      const std::string GetName() const;
-      bool GetSkippable() const { return skipOnTooLate; }
-
-    protected:
-      std::string name;
-
-      std::vector < boost::shared_ptr<ITaskSequenceEntry> > entries;
-
-      // time assigned for 1 run of this sequence
-      // if 0, run continuously
-      int sequenceTime_ms;
-
-      // if at due start time the previous run is not ready yet,
-      // if true: just forget about the lost time
-      // if false: start as soon as previous run is ready, to keep up with the sync
-      bool skipOnTooLate;
-
-  };
-
-}
+} // namespace blunted
 
 #endif

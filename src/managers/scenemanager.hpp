@@ -3,36 +3,36 @@
 
 #include "defines.hpp"
 
-#include "types/singleton.hpp"
-#include "types/lockable.hpp"
 #include "scene/scene.hpp"
+#include "types/lockable.hpp"
+#include "types/singleton.hpp"
 
 namespace blunted {
 
-  typedef Lockable < std::vector < boost::shared_ptr<IScene> > > vector_Scenes;
+typedef Lockable<std::vector<boost::shared_ptr<IScene>>> vector_Scenes;
 
-  class SceneManager : public Singleton<SceneManager> {
+class SceneManager : public Singleton<SceneManager> {
 
-    friend class Singleton<SceneManager>;
+  friend class Singleton<SceneManager>;
 
-    public:
-      SceneManager();
-      ~SceneManager();
-      
-      virtual void Exit();
+public:
+  SceneManager();
+  ~SceneManager();
 
-      void RegisterScene(boost::shared_ptr<IScene> scene);
-      int GetNumScenes();
-      boost::shared_ptr<IScene> GetScene(int index, bool &success); // ATOMIC
-      boost::shared_ptr<IScene> GetScene(const std::string &name, bool &success); // ATOMIC
-      
-    protected:
-      vector_Scenes scenes;
+  virtual void Exit();
 
-    private:
+  void RegisterScene(boost::shared_ptr<IScene> scene);
+  int GetNumScenes();
+  boost::shared_ptr<IScene> GetScene(int index, bool &success); // ATOMIC
+  boost::shared_ptr<IScene> GetScene(const std::string &name,
+                                     bool &success); // ATOMIC
 
-  };
+protected:
+  vector_Scenes scenes;
 
-}
+private:
+};
+
+} // namespace blunted
 
 #endif
