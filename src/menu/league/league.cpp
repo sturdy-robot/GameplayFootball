@@ -1,6 +1,7 @@
 // written by bastiaan konings schuiling 2008 - 2015
-// this work is public domain. the code is undocumented, scruffy, untested, and should generally not be used for anything important.
-// i do not offer support, so don't ask. to be used for inspiration :)
+// this work is public domain. the code is undocumented, scruffy, untested, and
+// should generally not be used for anything important. i do not offer support,
+// so don't ask. to be used for inspiration :)
 
 #include "league.hpp"
 
@@ -8,28 +9,34 @@
 
 #include "../../league/leaguecode.hpp"
 
-#include "utils/gui2/widgets/root.hpp"
-#include "utils/gui2/widgets/frame.hpp"
 #include "utils/gui2/widgets/caption.hpp"
+#include "utils/gui2/widgets/frame.hpp"
+#include "utils/gui2/widgets/root.hpp"
 #include "utils/gui2/widgets/text.hpp"
 
 #include "base/utils.hpp"
 
-LeaguePage::LeaguePage(Gui2WindowManager *windowManager, const Gui2PageData &pageData) : Gui2Page(windowManager, pageData) {
+LeaguePage::LeaguePage(Gui2WindowManager *windowManager,
+                       const Gui2PageData &pageData)
+    : Gui2Page(windowManager, pageData) {
 
-  Gui2Caption *title = new Gui2Caption(windowManager, "caption_league", 20, 20, 60, 3, "League");
+  Gui2Caption *title =
+      new Gui2Caption(windowManager, "caption_league", 20, 20, 60, 3, "League");
   this->AddView(title);
   title->Show();
 
-  captionTime = new Gui2Caption(windowManager, "caption_league_time", 60, 20, 20, 3, "time");
+  captionTime = new Gui2Caption(windowManager, "caption_league_time", 60, 20,
+                                20, 3, "time");
   this->AddView(captionTime);
   captionTime->Show();
 
   SetTimeCaption();
 
-  Gui2Grid *grid = new Gui2Grid(windowManager, "grid_league_main", 20, 30, 60, 50);
+  Gui2Grid *grid =
+      new Gui2Grid(windowManager, "grid_league_main", 20, 30, 60, 50);
 
-  Gui2Button *buttonStepTime = new Gui2Button(windowManager, "button_league_steptime", 20, 30, 30, 3, "Step time");
+  Gui2Button *buttonStepTime = new Gui2Button(
+      windowManager, "button_league_steptime", 20, 30, 30, 3, "Step time");
   buttonStepTime->sig_OnClick.connect(boost::bind(&LeaguePage::StepTime, this));
   buttonStepTime->SetFocus();
 
@@ -42,27 +49,33 @@ LeaguePage::LeaguePage(Gui2WindowManager *windowManager, const Gui2PageData &pag
   this->Show();
 }
 
-LeaguePage::~LeaguePage() {
-}
+LeaguePage::~LeaguePage() {}
 
 void LeaguePage::StepTime() {
-  DatabaseResult *result = GetDB()->Query("SELECT strftime(\"%w\", timestamp), strftime(\"%Y\", timestamp), seasonyear FROM settings LIMIT 1");
+  DatabaseResult *result =
+      GetDB()->Query("SELECT strftime(\"%w\", timestamp), strftime(\"%Y\", "
+                     "timestamp), seasonyear FROM settings LIMIT 1");
   int dayOfWeek = atoi(result->data.at(0).at(0).c_str());
   int actualyear = atoi(result->data.at(0).at(1).c_str());
   int seasonyear = atoi(result->data.at(0).at(2).c_str());
   delete result;
 
   int offset = 0;
-  if (dayOfWeek < 3) offset = 3 - dayOfWeek;
-  else if (dayOfWeek < 6) offset = 6 - dayOfWeek;
-  else offset = 4;
+  if (dayOfWeek < 3)
+    offset = 3 - dayOfWeek;
+  else if (dayOfWeek < 6)
+    offset = 6 - dayOfWeek;
+  else
+    offset = 4;
 
-  result = GetDB()->Query("UPDATE settings SET timestamp = date(timestamp, '+" + int_to_str(offset) + " day')");
+  result = GetDB()->Query("UPDATE settings SET timestamp = date(timestamp, '+" +
+                          int_to_str(offset) + " day')");
   delete result;
 
   // check if season complete
   if (actualyear > seasonyear) {
-    result = GetDB()->Query("UPDATE settings SET seasonyear = " + int_to_str(seasonyear + 1));
+    result = GetDB()->Query("UPDATE settings SET seasonyear = " +
+                            int_to_str(seasonyear + 1));
     delete result;
     GenerateSeasonCalendars();
   }
@@ -71,41 +84,65 @@ void LeaguePage::StepTime() {
 }
 
 void LeaguePage::SetTimeCaption() {
-  DatabaseResult *result = GetDB()->Query("SELECT timestamp, strftime('%w', timestamp) FROM settings LIMIT 1");
+  DatabaseResult *result = GetDB()->Query(
+      "SELECT timestamp, strftime('%w', timestamp) FROM settings LIMIT 1");
   std::string dayName;
   switch (atoi(result->data.at(0).at(1).c_str())) {
-    case 0: dayName = "sunday"; break;
-    case 1: dayName = "monday"; break;
-    case 2: dayName = "tuesday"; break;
-    case 3: dayName = "wednesday"; break;
-    case 4: dayName = "thursday"; break;
-    case 5: dayName = "friday"; break;
-    case 6: dayName = "saturday"; break;
-    default: dayName = "bug"; break;
+  case 0:
+    dayName = "sunday";
+    break;
+  case 1:
+    dayName = "monday";
+    break;
+  case 2:
+    dayName = "tuesday";
+    break;
+  case 3:
+    dayName = "wednesday";
+    break;
+  case 4:
+    dayName = "thursday";
+    break;
+  case 5:
+    dayName = "friday";
+    break;
+  case 6:
+    dayName = "saturday";
+    break;
+  default:
+    dayName = "bug";
+    break;
   }
   captionTime->SetCaption(result->data.at(0).at(0) + " (" + dayName + ")");
   delete result;
 }
 
+LeagueStartPage::LeagueStartPage(Gui2WindowManager *windowManager,
+                                 const Gui2PageData &pageData)
+    : Gui2Page(windowManager, pageData) {
 
-
-LeagueStartPage::LeagueStartPage(Gui2WindowManager *windowManager, const Gui2PageData &pageData) : Gui2Page(windowManager, pageData) {
-
-  Gui2Frame *frame = new Gui2Frame(windowManager, "bg_league_start", 30, 35, 40, 30, true);
+  Gui2Frame *frame =
+      new Gui2Frame(windowManager, "bg_league_start", 30, 35, 40, 30, true);
   this->AddView(frame);
   frame->Show();
-  //bg->Redraw();
+  // bg->Redraw();
 
-  Gui2Caption *title = new Gui2Caption(windowManager, "caption_league_start", 5, 5, 20, 3, "Start/load league");
+  Gui2Caption *title = new Gui2Caption(windowManager, "caption_league_start", 5,
+                                       5, 20, 3, "Start/load league");
   frame->AddView(title);
   title->Show();
 
-  Gui2Button *buttonLoad = new Gui2Button(windowManager, "button_league_start_load", 0, 0, 30, 3, "Continue saved league");
+  Gui2Button *buttonLoad =
+      new Gui2Button(windowManager, "button_league_start_load", 0, 0, 30, 3,
+                     "Continue saved league");
   buttonLoad->sig_OnClick.connect(boost::bind(&LeagueStartPage::GoLoad, this));
-  Gui2Button *buttonNew = new Gui2Button(windowManager, "button_league_start_new", 0, 0, 30, 3, "Start new league");
+  Gui2Button *buttonNew =
+      new Gui2Button(windowManager, "button_league_start_new", 0, 0, 30, 3,
+                     "Start new league");
   buttonNew->sig_OnClick.connect(boost::bind(&LeagueStartPage::GoNew, this));
 
-  Gui2Grid *grid = new Gui2Grid(windowManager, "grid_league_start_choices", 5, 10, 90, 80);
+  Gui2Grid *grid =
+      new Gui2Grid(windowManager, "grid_league_start_choices", 5, 10, 90, 80);
   grid->AddView(buttonLoad, 0, 0);
   grid->AddView(buttonNew, 1, 0);
   grid->UpdateLayout(0.5);
@@ -117,14 +154,14 @@ LeagueStartPage::LeagueStartPage(Gui2WindowManager *windowManager, const Gui2Pag
   this->Show();
 }
 
-LeagueStartPage::~LeagueStartPage() {
-}
+LeagueStartPage::~LeagueStartPage() {}
 
 void LeagueStartPage::GoLoad() {
   this->Exit();
 
   Properties properties;
-  windowManager->GetPageFactory()->CreatePage((int)e_PageID_League_Start_Load, properties, 0);
+  windowManager->GetPageFactory()->CreatePage((int)e_PageID_League_Start_Load,
+                                              properties, 0);
 
   delete this;
 }
@@ -133,33 +170,39 @@ void LeagueStartPage::GoNew() {
   this->Exit();
 
   Properties properties;
-  windowManager->GetPageFactory()->CreatePage((int)e_PageID_League_Start_New, properties, 0);
+  windowManager->GetPageFactory()->CreatePage((int)e_PageID_League_Start_New,
+                                              properties, 0);
 
   delete this;
 }
 
+LeagueStartLoadPage::LeagueStartLoadPage(Gui2WindowManager *windowManager,
+                                         const Gui2PageData &pageData)
+    : Gui2Page(windowManager, pageData) {
 
-
-LeagueStartLoadPage::LeagueStartLoadPage(Gui2WindowManager *windowManager, const Gui2PageData &pageData) : Gui2Page(windowManager, pageData) {
-
-  Gui2Frame *frame = new Gui2Frame(windowManager, "bg_league_start_load", 20, 5, 60, 90, true);
+  Gui2Frame *frame =
+      new Gui2Frame(windowManager, "bg_league_start_load", 20, 5, 60, 90, true);
   this->AddView(frame);
 
-  Gui2Caption *title = new Gui2Caption(windowManager, "caption_league_start_load", 5, 5, 20, 3, "Load saved league");
+  Gui2Caption *title =
+      new Gui2Caption(windowManager, "caption_league_start_load", 5, 5, 20, 3,
+                      "Load saved league");
   frame->AddView(title);
 
-  browser = new Gui2FileBrowser(windowManager, "filebrowser_league_start_load", 5, 10, 40, 50, "./saves", e_DirEntryType_Directory);
+  browser =
+      new Gui2FileBrowser(windowManager, "filebrowser_league_start_load", 5, 10,
+                          40, 50, "./saves", e_DirEntryType_Directory);
   frame->AddView(browser);
 
-  browser->sig_OnClick.connect(boost::bind(&LeagueStartLoadPage::GoLoadSave, this));
+  browser->sig_OnClick.connect(
+      boost::bind(&LeagueStartLoadPage::GoLoadSave, this));
 
   browser->SetFocus();
 
   this->Show();
 }
 
-LeagueStartLoadPage::~LeagueStartLoadPage() {
-}
+LeagueStartLoadPage::~LeagueStartLoadPage() {}
 
 void LeagueStartLoadPage::GoLoadSave() {
   std::string saveName = browser->GetClickedEntry().name;
@@ -175,34 +218,51 @@ void LeagueStartLoadPage::GoLoadSave() {
   this->Exit();
 
   Properties properties;
-  windowManager->GetPageFactory()->CreatePage((int)e_PageID_League, properties, 0);
+  windowManager->GetPageFactory()->CreatePage((int)e_PageID_League, properties,
+                                              0);
 
   delete this;
 }
 
-
-
-LeagueStartNewPage::LeagueStartNewPage(Gui2WindowManager *windowManager, const Gui2PageData &pageData) : Gui2Page(windowManager, pageData) {
+LeagueStartNewPage::LeagueStartNewPage(Gui2WindowManager *windowManager,
+                                       const Gui2PageData &pageData)
+    : Gui2Page(windowManager, pageData) {
 
   data_SelectedDatabase = "default";
 
-  Gui2Frame *frame = new Gui2Frame(windowManager, "bg_league_start_new", 5, 5, 90, 90, true);
+  Gui2Frame *frame =
+      new Gui2Frame(windowManager, "bg_league_start_new", 5, 5, 90, 90, true);
 
-  Gui2Caption *title = new Gui2Caption(windowManager, "caption_league_start_new", 5, 5, 20, 3, "Start new league");
+  Gui2Caption *title =
+      new Gui2Caption(windowManager, "caption_league_start_new", 5, 5, 20, 3,
+                      "Start new league");
   frame->AddView(title);
   title->Show();
 
-  Gui2Grid *grid = new Gui2Grid(windowManager, "grid_league_start_new_choices", 5, 15, 90, 80);
+  Gui2Grid *grid = new Gui2Grid(windowManager, "grid_league_start_new_choices",
+                                5, 15, 90, 80);
 
-  Gui2Caption *databaseSelectCaption = new Gui2Caption(windowManager, "caption_league_start_new_dbselect", 0, 0, 30, 2.5, "Select foundation database");
-  Gui2Caption *currencySelectCaption = new Gui2Caption(windowManager, "caption_league_start_new_currency", 0, 0, 30, 2.5, "Select currency");
-  Gui2Caption *saveNameCaption = new Gui2Caption(windowManager, "caption_league_start_new_savegamename", 0, 0, 30, 2.5, "Savegame name");
-  Gui2Caption *managerNameCaption = new Gui2Caption(windowManager, "caption_league_start_new_managername", 0, 0, 30, 2.5, "Manager name");
+  Gui2Caption *databaseSelectCaption =
+      new Gui2Caption(windowManager, "caption_league_start_new_dbselect", 0, 0,
+                      30, 2.5, "Select foundation database");
+  Gui2Caption *currencySelectCaption =
+      new Gui2Caption(windowManager, "caption_league_start_new_currency", 0, 0,
+                      30, 2.5, "Select currency");
+  Gui2Caption *saveNameCaption =
+      new Gui2Caption(windowManager, "caption_league_start_new_savegamename", 0,
+                      0, 30, 2.5, "Savegame name");
+  Gui2Caption *managerNameCaption =
+      new Gui2Caption(windowManager, "caption_league_start_new_managername", 0,
+                      0, 30, 2.5, "Manager name");
 
-  databaseSelectButton = new Gui2Button(windowManager, "button_league_start_new_dbselect", 0, 0, 30, 3, data_SelectedDatabase);
-  databaseSelectButton->sig_OnClick.connect(boost::bind(&LeagueStartNewPage::GoDatabaseSelectDialog, this));
+  databaseSelectButton =
+      new Gui2Button(windowManager, "button_league_start_new_dbselect", 0, 0,
+                     30, 3, data_SelectedDatabase);
+  databaseSelectButton->sig_OnClick.connect(
+      boost::bind(&LeagueStartNewPage::GoDatabaseSelectDialog, this));
 
-  currencySelectPulldown = new Gui2Pulldown(windowManager, "pulldown_league_start_new_currencyselect", 0, 0, 30, 3);
+  currencySelectPulldown = new Gui2Pulldown(
+      windowManager, "pulldown_league_start_new_currencyselect", 0, 0, 30, 3);
   currencySelectPulldown->AddEntry("Euro", "euro");
   currencySelectPulldown->AddEntry("Dollar", "dollar");
   currencySelectPulldown->AddEntry("Yen", "yen");
@@ -214,24 +274,38 @@ LeagueStartNewPage::LeagueStartNewPage(Gui2WindowManager *windowManager, const G
   currencySelectPulldown->AddEntry("Hong Kong dollar", "hongkongdollar");
   currencySelectPulldown->AddEntry("Norwegian krone", "norkrone");
 
-  difficultySlider = new Gui2Slider(windowManager, "slider_league_start_new_difficulty", 0, 0, 30, 6, "Initial difficulty");
-  saveNameInput = new Gui2EditLine(windowManager, "editline_league_start_new_savegamename", 0, 0, 30, 3, "NewLeague");
-  saveNameInput->SetAllowedChars("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_ ");
+  difficultySlider =
+      new Gui2Slider(windowManager, "slider_league_start_new_difficulty", 0, 0,
+                     30, 6, "Initial difficulty");
+  saveNameInput =
+      new Gui2EditLine(windowManager, "editline_league_start_new_savegamename",
+                       0, 0, 30, 3, "NewLeague");
+  saveNameInput->SetAllowedChars(
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_ ");
   saveNameInput->SetMaxLength(24);
-  managerNameInput = new Gui2EditLine(windowManager, "editline_league_start_new_managername", 0, 0, 30, 3, "Titi Fillanovi");
-  managerNameInput->SetAllowedChars("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-=`~@#$%^&*()_+[]{}\\,./<>?;':\" ");
+  managerNameInput =
+      new Gui2EditLine(windowManager, "editline_league_start_new_managername",
+                       0, 0, 30, 3, "Titi Fillanovi");
+  managerNameInput->SetAllowedChars(
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-=`~@#$%^&"
+      "*()_+[]{}\\,./<>?;':\" ");
   managerNameInput->SetMaxLength(32);
-  Gui2Button *proceedButton = new Gui2Button(windowManager, "button_league_start_new_proceed", 0, 0, 30, 3, "Proceed");
-  proceedButton->sig_OnClick.connect(boost::bind(&LeagueStartNewPage::GoProceed, this));
+  Gui2Button *proceedButton = new Gui2Button(
+      windowManager, "button_league_start_new_proceed", 0, 0, 30, 3, "Proceed");
+  proceedButton->sig_OnClick.connect(
+      boost::bind(&LeagueStartNewPage::GoProceed, this));
 
-  Gui2Grid *gridDBSelect = new Gui2Grid(windowManager, "grid_league_start_new_choices_dbselect", 0, 0, 1, 1);
+  Gui2Grid *gridDBSelect = new Gui2Grid(
+      windowManager, "grid_league_start_new_choices_dbselect", 0, 0, 1, 1);
   gridDBSelect->AddView(databaseSelectCaption, 0, 0);
   gridDBSelect->AddView(databaseSelectButton, 1, 0);
   gridDBSelect->UpdateLayout(0.0, 0.0, 0.5, 0.5);
   gridDBSelect->SetWrapping(false);
   grid->AddView(gridDBSelect, 0, 0);
 
-  Gui2Grid *gridCurrencySelect = new Gui2Grid(windowManager, "grid_league_start_new_choices_currencyselect", 0, 0, 1, 1);
+  Gui2Grid *gridCurrencySelect =
+      new Gui2Grid(windowManager,
+                   "grid_league_start_new_choices_currencyselect", 0, 0, 1, 1);
   gridCurrencySelect->AddView(currencySelectCaption, 0, 0);
   gridCurrencySelect->AddView(currencySelectPulldown, 1, 0);
   gridCurrencySelect->UpdateLayout(0.0, 0.0, 0.5, 0.5);
@@ -240,14 +314,16 @@ LeagueStartNewPage::LeagueStartNewPage(Gui2WindowManager *windowManager, const G
 
   grid->AddView(difficultySlider, 2, 0);
 
-  Gui2Grid *gridSaveName = new Gui2Grid(windowManager, "grid_league_start_new_choices_savegamename", 0, 0, 1, 1);
+  Gui2Grid *gridSaveName = new Gui2Grid(
+      windowManager, "grid_league_start_new_choices_savegamename", 0, 0, 1, 1);
   gridSaveName->AddView(saveNameCaption, 0, 0);
   gridSaveName->AddView(saveNameInput, 1, 0);
   gridSaveName->UpdateLayout(0.0, 0.0, 0.5, 0.5);
   gridSaveName->SetWrapping(false);
   grid->AddView(gridSaveName, 3, 0);
 
-  Gui2Grid *gridManagerName = new Gui2Grid(windowManager, "grid_league_start_new_choices_managername", 0, 0, 1, 1);
+  Gui2Grid *gridManagerName = new Gui2Grid(
+      windowManager, "grid_league_start_new_choices_managername", 0, 0, 1, 1);
   gridManagerName->AddView(managerNameCaption, 0, 0);
   gridManagerName->AddView(managerNameInput, 1, 0);
   gridManagerName->UpdateLayout(0.0, 0.0, 0.5, 0.5);
@@ -260,15 +336,22 @@ LeagueStartNewPage::LeagueStartNewPage(Gui2WindowManager *windowManager, const G
   frame->AddView(grid);
   grid->Show();
 
-  Gui2Text *explanationText = new Gui2Text(windowManager, "grid_league_start_new_choices_explanation", 40, 15, 40, 75, 2.5, 40, "");
+  Gui2Text *explanationText =
+      new Gui2Text(windowManager, "grid_league_start_new_choices_explanation",
+                   40, 15, 40, 75, 2.5, 40, "");
 
-  explanationText->AddText((std::string)
-                           "The foundation database will be copied to a new directory that will serve as a 'save file' for your league. So, this database is what " +
-                           "your league will be based on; any changes to the foundation database later on won't affect your league save (or the other way round).");
+  explanationText->AddText(
+      (std::string) "The foundation database will be copied to a new directory "
+                    "that will serve as a 'save file' for your league. So, "
+                    "this database is what " +
+      "your league will be based on; any changes to the foundation database "
+      "later on won't affect your league save (or the other way round).");
   explanationText->AddEmptyLine();
-  explanationText->AddText((std::string)
-                           "You can find the foundation database(s) in the 'databases' subdirectory of your Gameplay Football installation, and the " +
-                           "saved leagues and cups in the 'save' directory.");
+  explanationText->AddText(
+      (std::string) "You can find the foundation database(s) in the "
+                    "'databases' subdirectory of your Gameplay Football "
+                    "installation, and the " +
+      "saved leagues and cups in the 'save' directory.");
 
   frame->AddView(explanationText);
   explanationText->Show();
@@ -281,16 +364,21 @@ LeagueStartNewPage::LeagueStartNewPage(Gui2WindowManager *windowManager, const G
   this->Show();
 }
 
-LeagueStartNewPage::~LeagueStartNewPage() {
-}
+LeagueStartNewPage::~LeagueStartNewPage() {}
 
 void LeagueStartNewPage::GoDatabaseSelectDialog() {
-  databaseSelectDialog = new Gui2Dialog(windowManager, "dialog_league_start_new_dbselect", 30, 25, 40, 50, "Select source database");
+  databaseSelectDialog =
+      new Gui2Dialog(windowManager, "dialog_league_start_new_dbselect", 30, 25,
+                     40, 50, "Select source database");
   previousFocus = windowManager->GetFocus();
-  databaseSelectDialog->sig_OnClose.connect(boost::bind(&LeagueStartNewPage::CloseDatabaseSelectDialog, this));
+  databaseSelectDialog->sig_OnClose.connect(
+      boost::bind(&LeagueStartNewPage::CloseDatabaseSelectDialog, this));
 
-  databaseSelectBrowser = new Gui2FileBrowser(windowManager, "filebrowser_league_start_new_dbselect", 0, 0, 39, 40, "./databases", e_DirEntryType_Directory);
-  databaseSelectBrowser->sig_OnClick.connect(boost::bind(&LeagueStartNewPage::CloseDatabaseSelectDialog, this));
+  databaseSelectBrowser = new Gui2FileBrowser(
+      windowManager, "filebrowser_league_start_new_dbselect", 0, 0, 39, 40,
+      "./databases", e_DirEntryType_Directory);
+  databaseSelectBrowser->sig_OnClick.connect(
+      boost::bind(&LeagueStartNewPage::CloseDatabaseSelectDialog, this));
   databaseSelectDialog->AddContent(databaseSelectBrowser);
 
   this->AddView(databaseSelectDialog);
@@ -304,7 +392,8 @@ void LeagueStartNewPage::GoDatabaseSelectDialog() {
 void LeagueStartNewPage::CloseDatabaseSelectDialog() {
   previousFocus->SetFocus();
 
-  if (databaseSelectBrowser->GetClickedEntry().type == e_DirEntryType_Directory) {
+  if (databaseSelectBrowser->GetClickedEntry().type ==
+      e_DirEntryType_Directory) {
     data_SelectedDatabase = databaseSelectBrowser->GetClickedEntry().name;
     databaseSelectButton->SetCaption(data_SelectedDatabase);
   }
@@ -323,26 +412,35 @@ void LeagueStartNewPage::GoProceed() {
   printf("manager: %s\n", managerNameInput->GetText().c_str());
   */
 
-  int errorCode = CreateNewLeagueSave(data_SelectedDatabase, saveNameInput->GetText());
+  int errorCode =
+      CreateNewLeagueSave(data_SelectedDatabase, saveNameInput->GetText());
   errorCode = 0; // todo: remove
-
 
   // result dialog
 
   previousFocus = windowManager->GetFocus();
 
-  createSaveDialog = new Gui2Dialog(windowManager, "dialog_league_start_new_createsave", 25, 30, 50, 40, "New league creation");
-  createSaveDialog->sig_OnClose.connect(boost::bind(&LeagueStartNewPage::CloseCreateSaveDialog, this));
+  createSaveDialog =
+      new Gui2Dialog(windowManager, "dialog_league_start_new_createsave", 25,
+                     30, 50, 40, "New league creation");
+  createSaveDialog->sig_OnClose.connect(
+      boost::bind(&LeagueStartNewPage::CloseCreateSaveDialog, this));
 
   if (errorCode == 0) {
 
-    Gui2Text *explanationText = new Gui2Text(windowManager, "text_league_start_new_createsave", 5, 5, 90, 75, 2.5, 60, "");
-    explanationText->AddText((std::string)
-                             "Successfully created new database directory. If you want to backup your save directory, you can find it here: '<game directory>/saves/" + saveNameInput->GetText() + "/'");
+    Gui2Text *explanationText =
+        new Gui2Text(windowManager, "text_league_start_new_createsave", 5, 5,
+                     90, 75, 2.5, 60, "");
+    explanationText->AddText(
+        (std::string) "Successfully created new database directory. If you "
+                      "want to backup your save directory, you can find it "
+                      "here: '<game directory>/saves/" +
+        saveNameInput->GetText() + "/'");
     createSaveDialog->AddContent(explanationText);
 
     (createSaveDialog->AddSingleButton("Yippee!"))->SetFocus();
-    createSaveDialog->sig_OnPositive.connect(boost::bind(&LeagueStartNewPage::CloseCreateSaveDialog, this));
+    createSaveDialog->sig_OnPositive.connect(
+        boost::bind(&LeagueStartNewPage::CloseCreateSaveDialog, this));
 
     success = true;
 
@@ -350,31 +448,44 @@ void LeagueStartNewPage::GoProceed() {
 
     std::string errorString;
     switch (errorCode) {
-      case 1: errorString = "Could not create save directory. Do you have write permissions? Or does it already exist?"; break;
-      case 2: errorString = "Could not copy database file. Disk full?"; break;
-      case 3: errorString = "Could not open copied database file. I have no idea why."; break;
-      case 4: errorString = "Could not copy some image file. Disk full?"; break;
+    case 1:
+      errorString = "Could not create save directory. Do you have write "
+                    "permissions? Or does it already exist?";
+      break;
+    case 2:
+      errorString = "Could not copy database file. Disk full?";
+      break;
+    case 3:
+      errorString = "Could not open copied database file. I have no idea why.";
+      break;
+    case 4:
+      errorString = "Could not copy some image file. Disk full?";
+      break;
     }
 
-    Gui2Text *explanationText = new Gui2Text(windowManager, "text_league_start_new_createsave", 5, 5, 90, 75, 2.5, 60, "");
-    explanationText->AddText((std::string)
-                             "Something went wrong! Error: " + errorString);
+    Gui2Text *explanationText =
+        new Gui2Text(windowManager, "text_league_start_new_createsave", 5, 5,
+                     90, 75, 2.5, 60, "");
+    explanationText->AddText((std::string) "Something went wrong! Error: " +
+                             errorString);
     explanationText->AddEmptyLine();
-    explanationText->AddText((std::string)
-                             "Please try to fix the problem and delete any possible remains of new save dir (<game directory>/saves/" + saveNameInput->GetText() + ")");
+    explanationText->AddText(
+        (std::string) "Please try to fix the problem and delete any possible "
+                      "remains of new save dir (<game directory>/saves/" +
+        saveNameInput->GetText() + ")");
     createSaveDialog->AddContent(explanationText);
 
     (createSaveDialog->AddSingleButton("Oh crud!"))->SetFocus();
-    createSaveDialog->sig_OnPositive.connect(boost::bind(&LeagueStartNewPage::CloseCreateSaveDialog, this));
-    // lol forwarding signals overload: createSaveDialog->sig_OnPositive.connect(boost::bind(boost:ref(Gui2Dialog::sig_OnClose), createSaveDialog));
+    createSaveDialog->sig_OnPositive.connect(
+        boost::bind(&LeagueStartNewPage::CloseCreateSaveDialog, this));
+    // lol forwarding signals overload:
+    // createSaveDialog->sig_OnPositive.connect(boost::bind(boost:ref(Gui2Dialog::sig_OnClose),
+    // createSaveDialog));
 
     success = false;
-
   }
 
   createSaveDialog->Show();
-
-
 
   /* test
 
@@ -393,7 +504,6 @@ void LeagueStartNewPage::GoProceed() {
 
   delete result;
   */
-
 }
 
 void LeagueStartNewPage::CloseCreateSaveDialog() {
@@ -412,20 +522,30 @@ void LeagueStartNewPage::CloseCreateSaveDialog() {
   if (success) {
 
     bool noError = PrepareDatabaseForLeague();
-    if (!noError) Log(e_FatalError, "LeagueStartNewPage", "CloseCreateSaveDialog", "Could not prepare database for league");
+    if (!noError)
+      Log(e_FatalError, "LeagueStartNewPage", "CloseCreateSaveDialog",
+          "Could not prepare database for league");
 
-    DatabaseResult *result = GetDB()->Query("INSERT INTO settings (managername, team_id, currency, difficulty, seasonyear, timestamp) VALUES ('" + managerNameInput->GetText() + "', 5, '" + currencySelectPulldown->GetSelected() + "', " + real_to_str(difficultySlider->GetValue()) + ", 2013, '2013-06-01')");
+    DatabaseResult *result = GetDB()->Query(
+        "INSERT INTO settings (managername, team_id, currency, difficulty, "
+        "seasonyear, timestamp) VALUES ('" +
+        managerNameInput->GetText() + "', 5, '" +
+        currencySelectPulldown->GetSelected() + "', " +
+        real_to_str(difficultySlider->GetValue()) + ", 2013, '2013-06-01')");
     delete result;
 
     GenerateSeasonCalendars();
 
     noError = SaveAutosaveToDatabase();
-    if (!noError) Log(e_FatalError, "LeagueStartNewPage", "CloseCreateSaveDialog", "Could not save autosave file to persistent database");
+    if (!noError)
+      Log(e_FatalError, "LeagueStartNewPage", "CloseCreateSaveDialog",
+          "Could not save autosave file to persistent database");
 
     this->Exit();
 
     Properties properties;
-    windowManager->GetPageFactory()->CreatePage((int)e_PageID_League, properties, 0);
+    windowManager->GetPageFactory()->CreatePage((int)e_PageID_League,
+                                                properties, 0);
 
     delete this;
   }

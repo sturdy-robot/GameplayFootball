@@ -1,6 +1,7 @@
 // written by bastiaan konings schuiling 2008 - 2015
-// this work is public domain. the code is undocumented, scruffy, untested, and should generally not be used for anything important.
-// i do not offer support, so don't ask. to be used for inspiration :)
+// this work is public domain. the code is undocumented, scruffy, untested, and
+// should generally not be used for anything important. i do not offer support,
+// so don't ask. to be used for inspiration :)
 
 #include "tacticsdebug.hpp"
 
@@ -15,24 +16,29 @@
 
 using namespace blunted;
 
-Gui2TacticsDebug::Gui2TacticsDebug(Gui2WindowManager *windowManager, const std::string &name, float x_percent, float y_percent, float width_percent, float height_percent, Match *match) : Gui2View(windowManager, name, x_percent, y_percent, width_percent, height_percent), match(match) {
+Gui2TacticsDebug::Gui2TacticsDebug(Gui2WindowManager *windowManager,
+                                   const std::string &name, float x_percent,
+                                   float y_percent, float width_percent,
+                                   float height_percent, Match *match)
+    : Gui2View(windowManager, name, x_percent, y_percent, width_percent,
+               height_percent),
+      match(match) {
   int x, y; // dummy
-  windowManager->GetCoordinates(x_percent, y_percent, width_percent, height_percent, x, y, w, h);
+  windowManager->GetCoordinates(x_percent, y_percent, width_percent,
+                                height_percent, x, y, w, h);
   image = windowManager->CreateImage2D(name, w, h, true);
   _dirtycache = false;
 }
 
-Gui2TacticsDebug::~Gui2TacticsDebug() {
-}
+Gui2TacticsDebug::~Gui2TacticsDebug() {}
 
-void Gui2TacticsDebug::GetImages(std::vector < boost::intrusive_ptr<Image2D> > &target) {
+void Gui2TacticsDebug::GetImages(
+    std::vector<boost::intrusive_ptr<Image2D>> &target) {
   target.push_back(image);
   Gui2View::GetImages(target);
 }
 
-float TacticsDebugID2Y(int id) {
-  return 0.2f + id * 1.4f;
-}
+float TacticsDebugID2Y(int id) { return 0.2f + id * 1.4f; }
 
 void Gui2TacticsDebug::Redraw() {
 
@@ -42,26 +48,44 @@ void Gui2TacticsDebug::Redraw() {
 
     for (unsigned int i = 0; i < entries.size(); i++) {
       int dudx, absy, dudw, absh;
-      windowManager->GetCoordinates(0, TacticsDebugID2Y(i) + 0.7f, 0, 0.2f, dudx, absy, dudw, absh);
-      //printf("i: %i, val: %f, y: %i\n", i, entries.at(i).value[0][1], y);
+      windowManager->GetCoordinates(0, TacticsDebugID2Y(i) + 0.7f, 0, 0.2f,
+                                    dudx, absy, dudw, absh);
+      // printf("i: %i, val: %f, y: %i\n", i, entries.at(i).value[0][1], y);
       assert(entries.at(i).value[0][0] >= 0.0f);
       assert(entries.at(i).value[0][0] <= 1.0f);
-      image->DrawRectangle(w * 0.35f * (1.0f - entries.at(i).value[0][0]) - 1.0f, absy, w * 0.35f * entries.at(i).value[0][0], absh, entries.at(i).color[0][0], 100);
-      image->DrawRectangle(w * 0.65f, absy, w * 0.35f * entries.at(i).value[0][1] + 1.0f, 2, entries.at(i).color[0][1], 100);
+      image->DrawRectangle(w * 0.35f * (1.0f - entries.at(i).value[0][0]) -
+                               1.0f,
+                           absy, w * 0.35f * entries.at(i).value[0][0], absh,
+                           entries.at(i).color[0][0], 100);
+      image->DrawRectangle(w * 0.65f, absy,
+                           w * 0.35f * entries.at(i).value[0][1] + 1.0f, 2,
+                           entries.at(i).color[0][1], 100);
 
-      windowManager->GetCoordinates(0, TacticsDebugID2Y(i) + 0.9f, 0, 0.2f, dudx, absy, dudw, absh);
-      //printf("i: %i, val: %f, y: %i\n", i, entries.at(i).value[0][1], y);
+      windowManager->GetCoordinates(0, TacticsDebugID2Y(i) + 0.9f, 0, 0.2f,
+                                    dudx, absy, dudw, absh);
+      // printf("i: %i, val: %f, y: %i\n", i, entries.at(i).value[0][1], y);
       assert(entries.at(i).value[1][0] >= 0.0f);
       assert(entries.at(i).value[1][0] <= 1.0f);
-      image->DrawRectangle(w * 0.35f * (1.0f - entries.at(i).value[1][0]) - 1.0f, absy, w * 0.35f * entries.at(i).value[1][0], absh, entries.at(i).color[1][0], 100);
-      image->DrawRectangle(w * 0.65f, absy, w * 0.35f * entries.at(i).value[1][1] + 1.0f, 2, entries.at(i).color[1][1], 100);
+      image->DrawRectangle(w * 0.35f * (1.0f - entries.at(i).value[1][0]) -
+                               1.0f,
+                           absy, w * 0.35f * entries.at(i).value[1][0], absh,
+                           entries.at(i).color[1][0], 100);
+      image->DrawRectangle(w * 0.65f, absy,
+                           w * 0.35f * entries.at(i).value[1][1] + 1.0f, 2,
+                           entries.at(i).color[1][1], 100);
 
-      windowManager->GetCoordinates(0, TacticsDebugID2Y(i) + 1.1f, 0, 0.2f, dudx, absy, dudw, absh);
-      //printf("i: %i, val: %f, y: %i\n", i, entries.at(i).value[0][1], y);
+      windowManager->GetCoordinates(0, TacticsDebugID2Y(i) + 1.1f, 0, 0.2f,
+                                    dudx, absy, dudw, absh);
+      // printf("i: %i, val: %f, y: %i\n", i, entries.at(i).value[0][1], y);
       assert(entries.at(i).value[2][0] >= 0.0f);
       assert(entries.at(i).value[2][0] <= 1.0f);
-      image->DrawRectangle(w * 0.35f * (1.0f - entries.at(i).value[2][0]) - 1.0f, absy, w * 0.35f * entries.at(i).value[2][0], absh, entries.at(i).color[2][0], 100);
-      image->DrawRectangle(w * 0.65f, absy, w * 0.35f * entries.at(i).value[2][1] + 1.0f, 2, entries.at(i).color[2][1], 100);
+      image->DrawRectangle(w * 0.35f * (1.0f - entries.at(i).value[2][0]) -
+                               1.0f,
+                           absy, w * 0.35f * entries.at(i).value[2][0], absh,
+                           entries.at(i).color[2][0], 100);
+      image->DrawRectangle(w * 0.65f, absy,
+                           w * 0.35f * entries.at(i).value[2][1] + 1.0f, 2,
+                           entries.at(i).color[2][1], 100);
     }
 
     image->OnChange();
@@ -69,7 +93,10 @@ void Gui2TacticsDebug::Redraw() {
   }
 }
 
-unsigned int Gui2TacticsDebug::AddEntry(const std::string &caption, const Vector3 &color1, const Vector3 &color2, const Vector3 &color3) {
+unsigned int Gui2TacticsDebug::AddEntry(const std::string &caption,
+                                        const Vector3 &color1,
+                                        const Vector3 &color2,
+                                        const Vector3 &color3) {
   TacticsDebugEntry entry;
   entry.caption = caption;
   entry.value[0][0] = 0.0f;
@@ -92,10 +119,13 @@ unsigned int Gui2TacticsDebug::AddEntry(const std::string &caption, const Vector
   this->GetSize(w, h);
 
   float y = TacticsDebugID2Y(entryID);
-  Gui2Caption *guiCaption = new Gui2Caption(windowManager, "caption_tacticsdebug_entry_" + int_to_str(entryID), 0, 0, 0, 1.2f, caption);
+  Gui2Caption *guiCaption = new Gui2Caption(
+      windowManager, "caption_tacticsdebug_entry_" + int_to_str(entryID), 0, 0,
+      0, 1.2f, caption);
   guiCaption->SetColor(color3);
   this->AddView(guiCaption);
-  guiCaption->SetPosition(w * 0.5f - guiCaption->GetTextWidthPercent() * 0.5f, y - 1.0f);
+  guiCaption->SetPosition(w * 0.5f - guiCaption->GetTextWidthPercent() * 0.5f,
+                          y - 1.0f);
   guiCaption->Show();
 
   _dirtycache = true;
@@ -103,11 +133,13 @@ unsigned int Gui2TacticsDebug::AddEntry(const std::string &caption, const Vector
   return entryID;
 }
 
-void Gui2TacticsDebug::SetValue(unsigned int entryID, int typeID, int teamID, float value) {
+void Gui2TacticsDebug::SetValue(unsigned int entryID, int typeID, int teamID,
+                                float value) {
   assert(entryID < entries.size());
   if (entries.at(entryID).value[typeID][teamID] != value) {
     entries.at(entryID).value[typeID][teamID] = value;
     _dirtycache = true;
   }
-  //printf("set value id %i, type id %i, team id %i, value %f\n", entryID, typeID, teamID, value);
+  // printf("set value id %i, type id %i, team id %i, value %f\n", entryID,
+  // typeID, teamID, value);
 }

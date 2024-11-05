@@ -1,6 +1,7 @@
 // written by bastiaan konings schuiling 2008 - 2015
-// this work is public domain. the code is undocumented, scruffy, untested, and should generally not be used for anything important.
-// i do not offer support, so don't ask. to be used for inspiration :)
+// this work is public domain. the code is undocumented, scruffy, untested, and
+// should generally not be used for anything important. i do not offer support,
+// so don't ask. to be used for inspiration :)
 
 #include "credits.hpp"
 
@@ -8,7 +9,9 @@
 
 #include "base/utils.hpp"
 
-CreditsPage::CreditsPage(Gui2WindowManager *windowManager, const Gui2PageData &pageData) : Gui2Page(windowManager, pageData) {
+CreditsPage::CreditsPage(Gui2WindowManager *windowManager,
+                         const Gui2PageData &pageData)
+    : Gui2Page(windowManager, pageData) {
 
   windowManager->BlackoutBackground(true);
 
@@ -22,13 +25,15 @@ CreditsPage::CreditsPage(Gui2WindowManager *windowManager, const Gui2PageData &p
   float textHeight = 60 / float(numtexts - 1);
 
   for (int i = 0; i < numtexts; i++) {
-    text[i] = new Gui2Caption(windowManager, "credittext" + int_to_str(i), 0, 0, 60, textHeight, "");//"test" + int_to_str(i));
+    text[i] = new Gui2Caption(windowManager, "credittext" + int_to_str(i), 0, 0,
+                              60, textHeight, ""); //"test" + int_to_str(i));
     this->AddView(text[i]);
     text[i]->Show();
   }
 
   for (int i = 0; i < numballs; i++) {
-    balls[i] = new Gui2Image(windowManager, "ball" + int_to_str(i), ballPos[i].coords[0], ballPos[i].coords[1], 4, 5);
+    balls[i] = new Gui2Image(windowManager, "ball" + int_to_str(i),
+                             ballPos[i].coords[0], ballPos[i].coords[1], 4, 5);
     this->AddView(balls[i]);
     balls[i]->LoadImage("media/menu/credits/ball.png");
     ballPos[i] = Vector3(random(60, 90), random(-60, -5), 0);
@@ -46,11 +51,7 @@ CreditsPage::CreditsPage(Gui2WindowManager *windowManager, const Gui2PageData &p
   this->Show();
 }
 
-CreditsPage::~CreditsPage() {
-
-  windowManager->BlackoutBackground(false);
-
-}
+CreditsPage::~CreditsPage() { windowManager->BlackoutBackground(false); }
 
 void CreditsPage::InitCreditsContents() {
 
@@ -58,7 +59,6 @@ void CreditsPage::InitCreditsContents() {
   AddHeader("GAMEPLAY FOOTBALL");
   AddWhitespace();
   AddWhitespace();
-
 
   AddHeader("blunt3d game engine");
 
@@ -113,7 +113,6 @@ void CreditsPage::InitCreditsContents() {
   AddSubHeader("early morning debugging");
   AddCredit("joris zwart");
 
-
   AddHeader("gameplay football");
 
   AddSubHeader("programming");
@@ -145,7 +144,6 @@ void CreditsPage::InitCreditsContents() {
 
   AddSubHeader("workspace/community for indie game development");
   AddCredit("indietopia groningen");
-
 
   AddHeader("now for the fun part!");
 
@@ -231,36 +229,47 @@ void CreditsPage::InitCreditsContents() {
 
   AddHeader("THE END");
 
-  for (int i = 0; i < numtexts; i++) AddWhitespace();
+  for (int i = 0; i < numtexts; i++)
+    AddWhitespace();
   AddSubHeader("no really, there's nothing more to say!");
 
-  for (int i = 0; i < 12; i++) AddWhitespace();
+  for (int i = 0; i < 12; i++)
+    AddWhitespace();
   AddSubHeader("go away! nothing to see here!");
 
-  for (int i = 0; i < 12; i++) AddWhitespace();
+  for (int i = 0; i < 12; i++)
+    AddWhitespace();
   AddHeader("stop rocking the boat!");
 
-  for (int i = 0; i < 16; i++) AddWhitespace();
+  for (int i = 0; i < 16; i++)
+    AddWhitespace();
   AddSubHeader("i'm going to call the police, you stalker!");
 
-  for (int i = 0; i < 12; i++) AddWhitespace();
+  for (int i = 0; i < 12; i++)
+    AddWhitespace();
   AddSubHeader("okay, i'm just going to rewind to the beginning now! hah!");
 
-  for (int i = 0; i < 5; i++) AddWhitespace();
+  for (int i = 0; i < 5; i++)
+    AddWhitespace();
   AddCredit("PROPERLY DECENT presents");
   AddHeader("GAMEPLAY FOOTBALL");
 
-  for (int i = 0; i < 12; i++) AddWhitespace();
+  for (int i = 0; i < 12; i++)
+    AddWhitespace();
   AddSubHeader("hah you fell for it, didn't you?");
 
-  for (int i = 0; i < 12; i++) AddWhitespace();
+  for (int i = 0; i < 12; i++)
+    AddWhitespace();
   AddCredit("okay, now i'm really going to rewind to the beginning. but you");
-  AddCredit("will never be sure until you watched all the credits again! muhaha!");
+  AddCredit(
+      "will never be sure until you watched all the credits again! muhaha!");
 
-  for (int i = 0; i < 6; i++) AddWhitespace();
+  for (int i = 0; i < 6; i++)
+    AddWhitespace();
   AddHeader("<3 BYE! <3");
 
-  for (int i = 0; i < numtexts; i++) AddWhitespace();
+  for (int i = 0; i < numtexts; i++)
+    AddWhitespace();
 }
 
 void CreditsPage::AddHeader(const std::string &blah) {
@@ -308,12 +317,19 @@ void CreditsPage::Process() {
 
     int index = (startIndex + i) % numtexts;
 
-    text[index]->SetPosition(14 + sin(atoi(text[index]->GetName().c_str()) * 0.24 - scrollOffset * 0.05) * 5
-                                + cos(atoi(text[index]->GetName().c_str()) * 1.0  + scrollOffset * 0.10) * 1, i * fullHeight - yOffset);
+    text[index]->SetPosition(
+        14 +
+            sin(atoi(text[index]->GetName().c_str()) * 0.24 -
+                scrollOffset * 0.05) *
+                5 +
+            cos(atoi(text[index]->GetName().c_str()) * 1.0 +
+                scrollOffset * 0.10) *
+                1,
+        i * fullHeight - yOffset);
     text[index]->Show();
   }
 
-  scrollOffset += 0.11;//windowManager->GetTimeStep_ms() / 60.0;
+  scrollOffset += 0.11; // windowManager->GetTimeStep_ms() / 60.0;
 
   // time to add a new text
   if (startIndex != previousStartIndex) {
@@ -326,19 +342,22 @@ void CreditsPage::Process() {
     text[index]->Redraw();
 
     creditOffset++;
-    if (creditOffset == credits.size()) creditOffset = 0;
+    if (creditOffset == credits.size())
+      creditOffset = 0;
 
     previousStartIndex = startIndex;
   }
-
 
   // BALLS
 
   for (int i = 0; i < numballs; i++) {
     ballMov[i].coords[1] += 0.25; // gravity
-    if (ballPos[i].coords[0] > 100 - 4 && ballMov[i].coords[0] > 0) ballMov[i].coords[0] = -ballMov[i].coords[0] * 0.7;
-    if (ballPos[i].coords[0] <       0 && ballMov[i].coords[0] < 0) ballMov[i].coords[0] = -ballMov[i].coords[0] * 0.7;
-    if (ballPos[i].coords[1] > 100 - 5 && ballMov[i].coords[1] > 20) ballMov[i].coords[1] = -ballMov[i].coords[1] * 0.6;
+    if (ballPos[i].coords[0] > 100 - 4 && ballMov[i].coords[0] > 0)
+      ballMov[i].coords[0] = -ballMov[i].coords[0] * 0.7;
+    if (ballPos[i].coords[0] < 0 && ballMov[i].coords[0] < 0)
+      ballMov[i].coords[0] = -ballMov[i].coords[0] * 0.7;
+    if (ballPos[i].coords[1] > 100 - 5 && ballMov[i].coords[1] > 20)
+      ballMov[i].coords[1] = -ballMov[i].coords[1] * 0.6;
     if (ballPos[i].coords[1] > 100) {
       ballPos[i] = Vector3(random(60, 90), random(-60, -5), 0);
       ballMov[i] = Vector3(random(-3, 7), random(-40, -10), 0);
@@ -346,7 +365,6 @@ void CreditsPage::Process() {
     ballPos[i] += ballMov[i] * 0.05;
     balls[i]->SetPosition(ballPos[i].coords[0], ballPos[i].coords[1]);
   }
-
 }
 
 void CreditsPage::ProcessJoystickEvent(JoystickEvent *event) {

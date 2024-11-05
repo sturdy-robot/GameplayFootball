@@ -1,14 +1,18 @@
 // written by bastiaan konings schuiling 2008 - 2015
-// this work is public domain. the code is undocumented, scruffy, untested, and should generally not be used for anything important.
-// i do not offer support, so don't ask. to be used for inspiration :)
+// this work is public domain. the code is undocumented, scruffy, untested, and
+// should generally not be used for anything important. i do not offer support,
+// so don't ask. to be used for inspiration :)
 
 #include "league_team.hpp"
 
 #include "../pagefactory.hpp"
 
-LeagueTeamPage::LeagueTeamPage(Gui2WindowManager *windowManager, const Gui2PageData &pageData) : Gui2Page(windowManager, pageData) {
+LeagueTeamPage::LeagueTeamPage(Gui2WindowManager *windowManager,
+                               const Gui2PageData &pageData)
+    : Gui2Page(windowManager, pageData) {
 
-  Gui2Caption *title = new Gui2Caption(windowManager, "caption_league_team", 20, 20, 60, 3, "Team");
+  Gui2Caption *title = new Gui2Caption(windowManager, "caption_league_team", 20,
+                                       20, 60, 3, "Team");
   this->AddView(title);
   title->Show();
 
@@ -17,14 +21,15 @@ LeagueTeamPage::LeagueTeamPage(Gui2WindowManager *windowManager, const Gui2PageD
   this->Show();
 }
 
-LeagueTeamPage::~LeagueTeamPage() {
-}
+LeagueTeamPage::~LeagueTeamPage() {}
 
+LeagueTeamFormationPage::LeagueTeamFormationPage(
+    Gui2WindowManager *windowManager, const Gui2PageData &pageData)
+    : Gui2Page(windowManager, pageData) {
 
-
-LeagueTeamFormationPage::LeagueTeamFormationPage(Gui2WindowManager *windowManager, const Gui2PageData &pageData) : Gui2Page(windowManager, pageData) {
-
-  Gui2Caption *title = new Gui2Caption(windowManager, "caption_league_team_formation", 20, 20, 60, 3, "Formation");
+  Gui2Caption *title =
+      new Gui2Caption(windowManager, "caption_league_team_formation", 20, 20,
+                      60, 3, "Formation");
   this->AddView(title);
   title->Show();
 
@@ -33,14 +38,15 @@ LeagueTeamFormationPage::LeagueTeamFormationPage(Gui2WindowManager *windowManage
   this->Show();
 }
 
-LeagueTeamFormationPage::~LeagueTeamFormationPage() {
-}
+LeagueTeamFormationPage::~LeagueTeamFormationPage() {}
 
+LeagueTeamPlayerSelectionPage::LeagueTeamPlayerSelectionPage(
+    Gui2WindowManager *windowManager, const Gui2PageData &pageData)
+    : Gui2Page(windowManager, pageData) {
 
-
-LeagueTeamPlayerSelectionPage::LeagueTeamPlayerSelectionPage(Gui2WindowManager *windowManager, const Gui2PageData &pageData) : Gui2Page(windowManager, pageData) {
-
-  Gui2Caption *title = new Gui2Caption(windowManager, "caption_league_team_playerselection", 20, 20, 60, 3, "Player selection");
+  Gui2Caption *title =
+      new Gui2Caption(windowManager, "caption_league_team_playerselection", 20,
+                      20, 60, 3, "Player selection");
   this->AddView(title);
   title->Show();
 
@@ -49,14 +55,14 @@ LeagueTeamPlayerSelectionPage::LeagueTeamPlayerSelectionPage(Gui2WindowManager *
   this->Show();
 }
 
-LeagueTeamPlayerSelectionPage::~LeagueTeamPlayerSelectionPage() {
-}
+LeagueTeamPlayerSelectionPage::~LeagueTeamPlayerSelectionPage() {}
 
+LeagueTeamTacticsPage::LeagueTeamTacticsPage(Gui2WindowManager *windowManager,
+                                             const Gui2PageData &pageData)
+    : Gui2Page(windowManager, pageData) {
 
-
-LeagueTeamTacticsPage::LeagueTeamTacticsPage(Gui2WindowManager *windowManager, const Gui2PageData &pageData) : Gui2Page(windowManager, pageData) {
-
-  Gui2Caption *title = new Gui2Caption(windowManager, "caption_league_team_tactics", 20, 20, 60, 3, "Tactics");
+  Gui2Caption *title = new Gui2Caption(
+      windowManager, "caption_league_team_tactics", 20, 20, 60, 3, "Tactics");
   this->AddView(title);
   title->Show();
 
@@ -65,14 +71,15 @@ LeagueTeamTacticsPage::LeagueTeamTacticsPage(Gui2WindowManager *windowManager, c
   this->Show();
 }
 
-LeagueTeamTacticsPage::~LeagueTeamTacticsPage() {
-}
+LeagueTeamTacticsPage::~LeagueTeamTacticsPage() {}
 
+LeagueTeamPlayerOverviewPage::LeagueTeamPlayerOverviewPage(
+    Gui2WindowManager *windowManager, const Gui2PageData &pageData)
+    : Gui2Page(windowManager, pageData) {
 
-
-LeagueTeamPlayerOverviewPage::LeagueTeamPlayerOverviewPage(Gui2WindowManager *windowManager, const Gui2PageData &pageData) : Gui2Page(windowManager, pageData) {
-
-  Gui2Caption *title = new Gui2Caption(windowManager, "caption_league_team_playeroverview", 20, 20, 60, 3, "Player overview");
+  Gui2Caption *title =
+      new Gui2Caption(windowManager, "caption_league_team_playeroverview", 20,
+                      20, 60, 3, "Player overview");
   this->AddView(title);
   title->Show();
 
@@ -81,14 +88,15 @@ LeagueTeamPlayerOverviewPage::LeagueTeamPlayerOverviewPage(Gui2WindowManager *wi
   this->Show();
 }
 
-LeagueTeamPlayerOverviewPage::~LeagueTeamPlayerOverviewPage() {
-}
+LeagueTeamPlayerOverviewPage::~LeagueTeamPlayerOverviewPage() {}
 
+LeagueTeamPlayerDevelopmentPage::LeagueTeamPlayerDevelopmentPage(
+    Gui2WindowManager *windowManager, const Gui2PageData &pageData)
+    : Gui2Page(windowManager, pageData) {
 
-
-LeagueTeamPlayerDevelopmentPage::LeagueTeamPlayerDevelopmentPage(Gui2WindowManager *windowManager, const Gui2PageData &pageData) : Gui2Page(windowManager, pageData) {
-
-  Gui2Caption *title = new Gui2Caption(windowManager, "caption_league_team_playerdevelopment", 20, 20, 60, 3, "Player development");
+  Gui2Caption *title =
+      new Gui2Caption(windowManager, "caption_league_team_playerdevelopment",
+                      20, 20, 60, 3, "Player development");
   this->AddView(title);
   title->Show();
 
@@ -97,14 +105,14 @@ LeagueTeamPlayerDevelopmentPage::LeagueTeamPlayerDevelopmentPage(Gui2WindowManag
   this->Show();
 }
 
-LeagueTeamPlayerDevelopmentPage::~LeagueTeamPlayerDevelopmentPage() {
-}
+LeagueTeamPlayerDevelopmentPage::~LeagueTeamPlayerDevelopmentPage() {}
 
+LeagueTeamSetupPage::LeagueTeamSetupPage(Gui2WindowManager *windowManager,
+                                         const Gui2PageData &pageData)
+    : Gui2Page(windowManager, pageData) {
 
-
-LeagueTeamSetupPage::LeagueTeamSetupPage(Gui2WindowManager *windowManager, const Gui2PageData &pageData) : Gui2Page(windowManager, pageData) {
-
-  Gui2Caption *title = new Gui2Caption(windowManager, "caption_league_team_setup", 20, 20, 60, 3, "Team setup");
+  Gui2Caption *title = new Gui2Caption(
+      windowManager, "caption_league_team_setup", 20, 20, 60, 3, "Team setup");
   this->AddView(title);
   title->Show();
 
@@ -113,5 +121,4 @@ LeagueTeamSetupPage::LeagueTeamSetupPage(Gui2WindowManager *windowManager, const
   this->Show();
 }
 
-LeagueTeamSetupPage::~LeagueTeamSetupPage() {
-}
+LeagueTeamSetupPage::~LeagueTeamSetupPage() {}

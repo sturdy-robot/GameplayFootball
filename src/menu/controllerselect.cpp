@@ -1,6 +1,7 @@
 // written by bastiaan konings schuiling 2008 - 2015
-// this work is public domain. the code is undocumented, scruffy, untested, and should generally not be used for anything important.
-// i do not offer support, so don't ask. to be used for inspiration :)
+// this work is public domain. the code is undocumented, scruffy, untested, and
+// should generally not be used for anything important. i do not offer support,
+// so don't ask. to be used for inspiration :)
 
 #include "controllerselect.hpp"
 
@@ -14,17 +15,22 @@
 
 using namespace blunted;
 
-ControllerSelectPage::ControllerSelectPage(Gui2WindowManager *windowManager, const Gui2PageData &pageData) : Gui2Page(windowManager, pageData) {
+ControllerSelectPage::ControllerSelectPage(Gui2WindowManager *windowManager,
+                                           const Gui2PageData &pageData)
+    : Gui2Page(windowManager, pageData) {
 
   inGame = pageData.properties->GetBool("isInGame");
 
-  Gui2Image *bg1 = new Gui2Image(windowManager, "image_gameover_bg", 10, 15, 80, 70);
+  Gui2Image *bg1 =
+      new Gui2Image(windowManager, "image_gameover_bg", 10, 15, 80, 70);
   this->AddView(bg1);
   bg1->LoadImage("media/menu/backgrounds/black.png");
   bg1->Show();
 
-  Gui2Caption *t1 = new Gui2Caption(windowManager, "caption_controllerselect_t1", 0, 0, 28, 3, "Team 1");
-  Gui2Caption *t2 = new Gui2Caption(windowManager, "caption_controllerselect_t2", 0, 0, 28, 3, "Team 2");
+  Gui2Caption *t1 = new Gui2Caption(
+      windowManager, "caption_controllerselect_t1", 0, 0, 28, 3, "Team 1");
+  Gui2Caption *t2 = new Gui2Caption(
+      windowManager, "caption_controllerselect_t2", 0, 0, 28, 3, "Team 2");
 
   t1->SetPosition(25 - t1->GetTextWidthPercent() * 0.5, 10);
   t2->SetPosition(75 - t2->GetTextWidthPercent() * 0.5, 10);
@@ -36,7 +42,7 @@ ControllerSelectPage::ControllerSelectPage(Gui2WindowManager *windowManager, con
 
   this->SetFocus();
 
-  const std::vector<IHIDevice*> &controllers = GetControllers();
+  const std::vector<IHIDevice *> &controllers = GetControllers();
   if (inGame) {
     sides = GetMenuTask()->GetControllerSetup();
     assert(sides.size() == controllers.size());
@@ -48,18 +54,28 @@ ControllerSelectPage::ControllerSelectPage(Gui2WindowManager *windowManager, con
       side.side = sides.at(i).side;
     } else {
       side.side = 0;
-      if (i == 0 && controllers.size() < 2) side.side = -1; // autoselect 1st player == team 0 (side -1)
-      else if (i == 1) side.side = -1; // if more than 1 controller, we're likely to have a gamepad on id > 0, so pick this one as auto p1 instead
+      if (i == 0 && controllers.size() < 2)
+        side.side = -1; // autoselect 1st player == team 0 (side -1)
+      else if (i == 1)
+        side.side =
+            -1; // if more than 1 controller, we're likely to have a gamepad on
+                // id > 0, so pick this one as auto p1 instead
     }
-    side.controllerImage = new Gui2Image(windowManager, "image_controller" + int_to_str(i), 0, 0, 14, 10);
+    side.controllerImage = new Gui2Image(
+        windowManager, "image_controller" + int_to_str(i), 0, 0, 14, 10);
     this->AddView(side.controllerImage);
     if (controllers.at(i)->GetDeviceType() == e_HIDeviceType_Gamepad) {
-      side.controllerImage->LoadImage("media/menu/controller/controller_small.png");
+      side.controllerImage->LoadImage(
+          "media/menu/controller/controller_small.png");
     } else {
-      side.controllerImage->LoadImage("media/menu/controller/keyboard_small.png");
+      side.controllerImage->LoadImage(
+          "media/menu/controller/keyboard_small.png");
     }
     side.controllerImage->Show();
-    if (!inGame) sides.push_back(side); else sides.at(i) = side;
+    if (!inGame)
+      sides.push_back(side);
+    else
+      sides.at(i) = side;
     delay.push_back(0);
   }
 
@@ -68,8 +84,7 @@ ControllerSelectPage::ControllerSelectPage(Gui2WindowManager *windowManager, con
   this->Show();
 }
 
-ControllerSelectPage::~ControllerSelectPage() {
-}
+ControllerSelectPage::~ControllerSelectPage() {}
 
 void ControllerSelectPage::SetImagePositions() {
   for (unsigned int i = 0; i < sides.size(); i++) {
@@ -78,12 +93,10 @@ void ControllerSelectPage::SetImagePositions() {
   }
 }
 
-void ControllerSelectPage::Process() {
-  Gui2View::Process();
-}
+void ControllerSelectPage::Process() { Gui2View::Process(); }
 
 void ControllerSelectPage::ProcessKeyboardEvent(KeyboardEvent *event) {
-  HIDKeyboard *keyboard = static_cast<HIDKeyboard*>(GetControllers().at(0));
+  HIDKeyboard *keyboard = static_cast<HIDKeyboard *>(GetControllers().at(0));
   if (event->GetKeyOnce(keyboard->GetFunctionMapping(e_ButtonFunction_Left))) {
     sides.at(0).side -= 1;
   }
@@ -96,10 +109,10 @@ void ControllerSelectPage::ProcessKeyboardEvent(KeyboardEvent *event) {
 }
 
 void ControllerSelectPage::ProcessJoystickEvent(JoystickEvent *event) {
-  const std::vector<IHIDevice*> &controllers = GetControllers();
+  const std::vector<IHIDevice *> &controllers = GetControllers();
   for (unsigned int i = 1; i < controllers.size(); i++) {
     if (delay.at(i) < EnvironmentManager::GetInstance().GetTime_ms() - 250) {
-      HIDGamepad *gamepad = static_cast<HIDGamepad*>(controllers.at(i));
+      HIDGamepad *gamepad = static_cast<HIDGamepad *>(controllers.at(i));
       if (gamepad->GetButtonValue(e_ButtonFunction_Left) > 0.5) {
         sides.at(i).side -= 1;
         delay.at(i) = EnvironmentManager::GetInstance().GetTime_ms();
